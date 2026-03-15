@@ -21,17 +21,12 @@ from .types import (
     RunSummary,
     load_questions,
     sample_batch,
+    sample_random_batch,
     PROJECT_ROOT,
 )
+from .utils import load_memory
 
 DEFAULT_CONCURRENCY = int(os.environ.get("FORECAST_CONCURRENCY", "5"))
-
-
-def _load_memory() -> str:
-    path = PROJECT_ROOT / "memory.md"
-    if path.exists():
-        return path.read_text()
-    return ""
 
 
 async def _forecast_one(
@@ -111,7 +106,7 @@ async def _forecast_one(
     await _handler.handle(PipelineEvent(
         event_type=EventType.QUESTION_DONE,
         question_id=question.question_id, question_title=question.title,
-        data={"raw_probability": raw_prob, "calibrated_probability": calibrated},
+        data={"raw_probability": raw_prob, "calibrated_probability": calibrated, "brier_raw": brier_raw},
     ))
 
     return result
@@ -127,7 +122,7 @@ async def backtest_batch(
 ) -> list[ForecastResult]:
     """Run backtest on a batch of questions with bounded concurrency."""
     _handler = handler or NullHandler()
-    memory = memory if memory is not None else _load_memory()
+    memory = memory if memory is not None else load_memory()
     platt_params = load_params()
 
     traces_dir = PROJECT_ROOT / "logs" / "traces"
@@ -168,7 +163,7 @@ async def run_backtest(start_batch: int = 0, num_batches: int = 1, batch_size: i
     from .ui import RichHandler
 
     questions = load_questions()
-    memory = _load_memory()
+    memory = load_memory()
 
     with RichHandler() as handler:
         for batch_num in range(start_batch, start_batch + num_batches):
@@ -202,16 +197,20 @@ async def run_eval(batch_id: int, results: list[ForecastResult] | None = None) -
         print(f"No traces found for batch {batch_id}")
         return None
 
-    # Collect all historical raw probs and outcomes for Platt fitting
+    # Collect all historical raw probs and outcomes for Platt fitting.
+    # Index current batch by question_id to avoid re-reading those trace files.
+    current_batch_ids = {r.question.question_id for r in results}
+    all_raw_probs = [r.raw_probability for r in results]
+    all_outcomes = [r.question.outcome for r in results]
+
     traces_dir = PROJECT_ROOT / "logs" / "traces"
-    all_raw_probs = []
-    all_outcomes = []
     for trace_file in sorted(traces_dir.glob("*.json")):
         with open(trace_file) as f:
             data = json.load(f)
         r = ForecastResult.model_validate(data)
-        all_raw_probs.append(r.raw_probability)
-        all_outcomes.append(r.question.outcome)
+        if r.question.question_id not in current_batch_ids:
+            all_raw_probs.append(r.raw_probability)
+            all_outcomes.append(r.question.outcome)
 
     print(f"\n=== Eval for Batch {batch_id} ({len(results)} questions) ===")
 
@@ -242,7 +241,11 @@ async def run_eval(batch_id: int, results: list[ForecastResult] | None = None) -
 
 
 async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0, batch_size: int = 12, concurrency: int = DEFAULT_CONCURRENCY) -> None:
-    """Run backtest → eval loop continuously for the specified duration."""
+    """Run backtest → eval loop continuously for the specified duration.
+
+    Phase 1 (initial): Run one deterministic batch → eval (triggers A/B testing).
+    Phase 2 (random_batches): Loop random batches until timer runs out.
+    """
     from .ui import RichHandler
 
     t_start = time.monotonic()
@@ -250,40 +253,83 @@ async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0, bat
     start_time = datetime.now(timezone.utc).isoformat()
 
     questions = load_questions()
-    max_batch = len(questions) // batch_size - 1
-    memory = _load_memory()
+    memory = load_memory()
 
     completed_batches: list[int] = []
+    forecasted_qids: set[int] = set()
     last_batch_result: BatchResult | None = None
 
-    with RichHandler() as handler:
-        for batch_id in range(start_batch, max_batch + 1):
-            if time.monotonic() >= deadline:
-                break
+    with RichHandler(deadline=deadline) as handler:
+        # --- Phase 1: Initial batch + eval (triggers autoresearcher A/B) ---
+        await handler.handle(PipelineEvent(
+            event_type=EventType.PHASE_CHANGE,
+            data={"phase": "initial", "batches_completed": 0},
+        ))
 
-            batch = sample_batch(questions, batch_id, batch_size=batch_size)
+        batch = sample_batch(questions, start_batch, batch_size=batch_size)
+
+        try:
+            results = await backtest_batch(batch, start_batch, memory, deadline=deadline, handler=handler, concurrency=concurrency)
+        except KeyboardInterrupt:
+            results = []
+
+        if results:
+            forecasted_qids.update(r.question.question_id for r in results)
+
+            await handler.handle(PipelineEvent(
+                event_type=EventType.PHASE_CHANGE,
+                data={"phase": "eval", "batches_completed": 0},
+            ))
 
             try:
-                results = await backtest_batch(batch, batch_id, memory, deadline=deadline, handler=handler, concurrency=concurrency)
+                batch_result = await run_eval(start_batch, results=results)
+            except KeyboardInterrupt:
+                batch_result = None
+
+            if batch_result:
+                last_batch_result = batch_result
+            completed_batches.append(start_batch)
+            memory = load_memory()
+
+        # --- Phase 2: Random batches until deadline ---
+        await handler.handle(PipelineEvent(
+            event_type=EventType.PHASE_CHANGE,
+            data={"phase": "random_batches", "batches_completed": len(completed_batches)},
+        ))
+
+        batch_counter = start_batch + 1
+        while time.monotonic() < deadline:
+            batch = sample_random_batch(questions, exclude_ids=forecasted_qids)
+
+            try:
+                results = await backtest_batch(
+                    batch, batch_counter, memory, deadline=deadline, handler=handler, concurrency=concurrency,
+                )
             except KeyboardInterrupt:
                 break
 
             if not results:
                 break
 
+            forecasted_qids.update(r.question.question_id for r in results)
+
             try:
-                batch_result = await run_eval(batch_id, results=results)
+                batch_result = await run_eval(batch_counter, results=results)
             except KeyboardInterrupt:
-                completed_batches.append(batch_id)
+                completed_batches.append(batch_counter)
                 break
 
             if batch_result:
                 last_batch_result = batch_result
 
-            completed_batches.append(batch_id)
+            completed_batches.append(batch_counter)
+            batch_counter += 1
+            memory = load_memory()
 
-            # Reload memory (postmortem may have updated it)
-            memory = _load_memory()
+            await handler.handle(PipelineEvent(
+                event_type=EventType.PHASE_CHANGE,
+                data={"phase": "random_batches", "batches_completed": len(completed_batches)},
+            ))
 
     # Save run summary
     end_time = datetime.now(timezone.utc).isoformat()

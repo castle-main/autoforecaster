@@ -8,7 +8,7 @@ from datetime import datetime
 import anthropic
 import httpx
 
-from .events import EventType, NullHandler, PipelineEvent, compute_cost
+from .events import EventType, NullHandler, PipelineEvent, track_api_cost
 from .types import SearchResult
 
 PERPLEXITY_URL = "https://api.perplexity.ai/chat/completions"
@@ -61,16 +61,9 @@ async def _decontaminate_content(
         }],
     )
 
-    # Track cost
     _handler = handler or NullHandler()
     if response.usage:
-        cost = compute_cost(DECONTAMINATION_MODEL, response.usage.input_tokens, response.usage.output_tokens)
-        await _handler.handle(PipelineEvent(
-            event_type=EventType.API_COST,
-            data={"provider": "anthropic", "model": DECONTAMINATION_MODEL, "cost_usd": cost,
-                  "input_tokens": response.usage.input_tokens,
-                  "output_tokens": response.usage.output_tokens},
-        ))
+        await track_api_cost(_handler, "anthropic", DECONTAMINATION_MODEL, response.usage.input_tokens, response.usage.output_tokens)
 
     cleaned = response.content[0].text
     was_contaminated = "[REDACTED: outcome information removed]" in cleaned
@@ -141,18 +134,13 @@ async def execute_search(
     content = data["choices"][0]["message"]["content"]
     citations = data.get("citations", [])
 
-    # Track Perplexity cost
     _handler = handler or NullHandler()
     usage = data.get("usage", {})
     if usage:
-        input_tokens = usage.get("prompt_tokens", 0)
-        output_tokens = usage.get("completion_tokens", 0)
-        cost = compute_cost(model, input_tokens, output_tokens)
-        await _handler.handle(PipelineEvent(
-            event_type=EventType.API_COST,
-            data={"provider": "perplexity", "model": model, "cost_usd": cost,
-                  "input_tokens": input_tokens, "output_tokens": output_tokens},
-        ))
+        await track_api_cost(
+            _handler, "perplexity", model,
+            usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0),
+        )
 
     # Post-hoc filter: remove citations with dates after close_date
     close_dt = datetime.fromisoformat(close_date)

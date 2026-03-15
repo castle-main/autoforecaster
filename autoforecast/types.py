@@ -188,18 +188,35 @@ class RunSummary(BaseModel):
     plot_path: Optional[str] = None
 
 
+# --- Schema utilities ---
+
+def clean_schema(schema: dict) -> dict:
+    """Clean pydantic JSON schema for Anthropic tool_use input_schema.
+
+    Resolves $ref pointers and removes unsupported keys.
+    """
+    defs = schema.pop("$defs", {})
+
+    def resolve(obj):
+        if isinstance(obj, dict):
+            if "$ref" in obj:
+                ref_name = obj["$ref"].split("/")[-1]
+                return resolve(defs.get(ref_name, {}))
+            return {k: resolve(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [resolve(item) for item in obj]
+        return obj
+
+    return resolve(schema)
+
+
 # --- Data utilities ---
 
 def load_questions(path: Optional[Path] = None) -> list[Question]:
     """Load all questions from questions.jsonl."""
+    from .utils import load_jsonl
     path = path or PROJECT_ROOT / "data" / "questions.jsonl"
-    questions = []
-    with open(path) as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                questions.append(Question.model_validate_json(line))
-    return questions
+    return [Question.model_validate(entry) for entry in load_jsonl(path)]
 
 
 def sample_batch(questions: list[Question], batch_id: int, batch_size: int = 12) -> list[Question]:
@@ -211,3 +228,13 @@ def sample_batch(questions: list[Question], batch_id: int, batch_size: int = 12)
     if start >= len(sorted_qs):
         raise ValueError(f"Batch {batch_id} exceeds dataset size ({len(sorted_qs)} questions)")
     return sorted_qs[start:end]
+
+
+def sample_random_batch(questions: list[Question], batch_size: int = 12, exclude_ids: set[int] | None = None) -> list[Question]:
+    """Sample a random batch, excluding already-forecasted question IDs."""
+    import random
+    pool = [q for q in questions if q.question_id not in (exclude_ids or set())]
+    if len(pool) < batch_size:
+        # Pool exhausted — allow repeats with updated prompts
+        pool = list(questions)
+    return random.sample(pool, min(batch_size, len(pool)))

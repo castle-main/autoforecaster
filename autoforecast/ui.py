@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from collections import deque
 from dataclasses import dataclass, field
 from typing import Any
@@ -71,13 +72,19 @@ class _QuestionState:
 class RichHandler:
     """Event handler that renders a live Rich dashboard with multi-question support."""
 
-    def __init__(self) -> None:
+    def __init__(self, deadline: float | None = None) -> None:
         self._console = Console()
         self._live: Live | None = None
         self._questions: dict[int, _QuestionState] = {}
         self._active_question_id: int | None = None
         self._log: deque[str] = deque(maxlen=8)
         self._batch_progress: str = ""
+        self._deadline: float | None = deadline
+        self._phase: str = ""
+        self._batches_completed: int = 0
+        # Running Brier accumulator
+        self._brier_sum: float = 0.0
+        self._brier_count: int = 0
         # Cost tracking by provider
         self._costs: dict[str, float] = {}
 
@@ -136,6 +143,11 @@ class RichHandler:
                     qs.calibrated_prob = cal
             raw = event.data.get("raw_probability")
             cal = event.data.get("calibrated_probability")
+            # Track running Brier on raw probability
+            brier = event.data.get("brier_raw")
+            if brier is not None:
+                self._brier_sum += brier
+                self._brier_count += 1
             prob_str = f"raw={raw:.2%}" if raw is not None else ""
             if cal is not None:
                 prob_str += f", cal={cal:.2%}"
@@ -215,17 +227,51 @@ class RichHandler:
             provider = event.data.get("provider", "unknown")
             self._costs[provider] = self._costs.get(provider, 0.0) + cost
 
+        elif et == EventType.PHASE_CHANGE:
+            self._phase = event.data.get("phase", "")
+            self._batches_completed = event.data.get("batches_completed", 0)
+
         elif et == EventType.BATCH_PROGRESS:
             current = event.data.get("current", 0)
             total = event.data.get("total", 0)
             batch_id = event.data.get("batch_id", "?")
             self._batch_progress = f"Batch {batch_id}  [{current}/{total}]"
 
+    def _format_remaining(self) -> str:
+        if self._deadline is None:
+            return ""
+        remaining = max(0, self._deadline - time.monotonic())
+        h, remainder = divmod(int(remaining), 3600)
+        m, s = divmod(remainder, 60)
+        if h > 0:
+            return f"{h}h{m:02d}m"
+        return f"{m}m{s:02d}s"
+
+    def _phase_label(self) -> str:
+        labels = {
+            "initial": "Initial Batch",
+            "eval": "Eval + A/B Testing",
+            "random_batches": f"Random Batches ({self._batches_completed} done)",
+        }
+        return labels.get(self._phase, "")
+
     def _render(self) -> Group:
         parts = []
 
-        # Header: batch progress + cost
+        # Header: phase + timer + batch progress + Brier + cost
         header_text = Text()
+
+        # Phase and timer on first line
+        phase = self._phase_label()
+        if phase:
+            header_text.append(phase, style="bold magenta")
+            header_text.append("  ")
+        remaining = self._format_remaining()
+        if remaining:
+            header_text.append(f"{remaining} remaining", style="bold")
+            header_text.append("  ")
+
+        # Batch progress
         if self._batch_progress:
             header_text.append(self._batch_progress, style="bold")
             header_text.append("  ")
@@ -235,6 +281,11 @@ class RichHandler:
         n_total = len(self._questions)
         if n_total > 0:
             header_text.append(f"Completed: {n_done}/{n_total}", style="green" if n_done == n_total else "yellow")
+
+        # Running Brier average
+        if self._brier_count > 0:
+            avg_brier = self._brier_sum / self._brier_count
+            header_text.append(f"\nAvg Brier: {avg_brier:.4f} ({self._brier_count} questions)", style="bold")
 
         # Cost display
         total_cost = sum(self._costs.values())

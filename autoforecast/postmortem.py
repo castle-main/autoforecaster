@@ -7,19 +7,16 @@ import re
 
 import anthropic
 
-from .agent import _clean_schema
 from .types import (
     ForecastResult,
     PostmortemOutput,
     ProcessClassification,
     PROJECT_ROOT,
+    clean_schema,
 )
+from .utils import load_prompt
 
 MODEL = "claude-opus-4-6"
-
-
-def _load_prompt() -> str:
-    return (PROJECT_ROOT / "prompts" / "postmortem.md").read_text()
 
 
 def _format_result_for_postmortem(result: ForecastResult) -> str:
@@ -67,7 +64,7 @@ async def _run_one_postmortem(
     user_msg = _format_result_for_postmortem(result)
 
     schema = PostmortemOutput.model_json_schema()
-    tool_schema = _clean_schema(schema)
+    tool_schema = clean_schema(schema)
 
     tool = {
         "name": "provide_output",
@@ -105,7 +102,7 @@ async def run_postmortems(
 ) -> list[PostmortemOutput]:
     """Run postmortem on each forecast result (parallel)."""
     client = anthropic.AsyncAnthropic(timeout=120.0)
-    system_prompt = _load_prompt()
+    system_prompt = load_prompt("postmortem")
 
     return list(await asyncio.gather(*[
         _run_one_postmortem(result, client, system_prompt)
