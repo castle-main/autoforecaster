@@ -7,22 +7,19 @@ import re
 
 import anthropic
 
-from .events import EventType, NullHandler, PipelineEvent, Stage, compute_cost
+from .events import EventType, NullHandler, PipelineEvent, Stage, track_api_cost
 from .search import execute_search
 from .types import (
     AgentTrace,
     Question,
     SearchResult,
     SupervisorOutput,
-    PROJECT_ROOT,
+    clean_schema,
 )
+from .utils import load_prompt
 
 MODEL = "claude-opus-4-6"
 MAX_SUPERVISOR_SEARCH_ROUNDS = 3
-
-
-def _load_prompt() -> str:
-    return (PROJECT_ROOT / "prompts" / "supervisor.md").read_text()
 
 
 def _format_traces(traces: list[AgentTrace]) -> str:
@@ -58,7 +55,7 @@ async def supervise(
     """Reconcile 3 agent traces into a single probability."""
     _handler = handler or NullHandler()
     client = anthropic.AsyncAnthropic(timeout=120.0)
-    system_prompt = _load_prompt()
+    system_prompt = load_prompt("supervisor")
     if memory:
         system_prompt += f"\n\n## Accumulated Forecasting Lessons\n{memory}"
 
@@ -92,13 +89,7 @@ async def supervise(
     )
 
     if search_decision.usage:
-        cost = compute_cost(MODEL, search_decision.usage.input_tokens, search_decision.usage.output_tokens)
-        await _handler.handle(PipelineEvent(
-            event_type=EventType.API_COST,
-            data={"provider": "anthropic", "model": MODEL, "cost_usd": cost,
-                  "input_tokens": search_decision.usage.input_tokens,
-                  "output_tokens": search_decision.usage.output_tokens},
-        ))
+        await track_api_cost(_handler, "anthropic", MODEL, search_decision.usage.input_tokens, search_decision.usage.output_tokens)
 
     search_decision_text = search_decision.content[0].text
 
@@ -136,8 +127,7 @@ async def supervise(
     )
 
     schema = SupervisorOutput.model_json_schema()
-    from .agent import _clean_schema
-    tool_schema = _clean_schema(schema)
+    tool_schema = clean_schema(schema)
 
     tool = {
         "name": "provide_output",
@@ -156,13 +146,7 @@ async def supervise(
     )
 
     if response.usage:
-        cost = compute_cost(MODEL, response.usage.input_tokens, response.usage.output_tokens)
-        await _handler.handle(PipelineEvent(
-            event_type=EventType.API_COST,
-            data={"provider": "anthropic", "model": MODEL, "cost_usd": cost,
-                  "input_tokens": response.usage.input_tokens,
-                  "output_tokens": response.usage.output_tokens},
-        ))
+        await track_api_cost(_handler, "anthropic", MODEL, response.usage.input_tokens, response.usage.output_tokens)
 
     for block in response.content:
         if block.type == "tool_use":

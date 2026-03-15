@@ -175,7 +175,7 @@ async def test_postmortems_parallel():
         )
 
     with patch("autoforecast.postmortem._run_one_postmortem", side_effect=mock_one), \
-         patch("autoforecast.postmortem._load_prompt", return_value="prompt"):
+         patch("autoforecast.postmortem.load_prompt", return_value="prompt"):
         from autoforecast.postmortem import run_postmortems
         postmortems = await run_postmortems(results)
 

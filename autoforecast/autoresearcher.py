@@ -10,8 +10,7 @@ from typing import Optional
 import anthropic
 import numpy as np
 
-from .agent import _clean_schema
-from .orchestrator import _forecast_one, _load_memory
+from .orchestrator import _forecast_one
 from .calibrate import load_params
 from .postmortem import filter_memory_for_ab
 from .types import (
@@ -21,26 +20,9 @@ from .types import (
     PostmortemOutput,
     PROJECT_ROOT,
 )
+from .utils import extract_json, load_jsonl, load_memory, load_program
 
 MODEL = "claude-opus-4-6"
-
-
-def _load_program() -> str:
-    path = PROJECT_ROOT / "program.md"
-    return path.read_text() if path.exists() else ""
-
-
-def _load_changelog() -> list[dict]:
-    path = PROJECT_ROOT / "logs" / "changelog.jsonl"
-    if not path.exists():
-        return []
-    entries = []
-    with open(path) as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                entries.append(json.loads(line))
-    return entries
 
 
 def _save_changelog_entry(entry: ChangelogEntry) -> None:
@@ -126,12 +108,7 @@ async def _analyze_error_patterns(
 
     text = response.content[0].text
     try:
-        import re
-        match = re.search(r'\{.*\}', text, re.DOTALL)
-        if match:
-            proposal = json.loads(match.group())
-        else:
-            return None
+        proposal = extract_json(text)
     except json.JSONDecodeError:
         return None
 
@@ -161,7 +138,7 @@ async def _ab_test(
     exclude_ids = {q.question_id for q in test_questions}
 
     # Filter memory to prevent hindsight contamination
-    full_memory = _load_memory()
+    full_memory = load_memory()
     filtered_memory = filter_memory_for_ab(full_memory, exclude_ids)
 
     platt_params = load_params()
@@ -195,8 +172,8 @@ async def run_autoresearcher(
     results: list[ForecastResult],
 ) -> Optional[ChangelogEntry]:
     """Main autoresearcher entry point: analyze errors, propose change, A/B test, accept/reject."""
-    program = _load_program()
-    changelog = _load_changelog()
+    program = load_program()
+    changelog = load_jsonl(PROJECT_ROOT / "logs" / "changelog.jsonl")
 
     # Step 1: Analyze error patterns and propose change
     proposal = await _analyze_error_patterns(postmortems, changelog, program)
