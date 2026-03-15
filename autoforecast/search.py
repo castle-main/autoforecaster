@@ -83,6 +83,7 @@ async def execute_search(
     api_key: str | None = None,
     handler=None,
     question_title: str | None = None,
+    model: str = "sonar-reasoning-pro",
 ) -> SearchResult:
     """Execute a single search query via Perplexity API with date gating.
 
@@ -95,7 +96,7 @@ async def execute_search(
     date_constrained_query = f"{query} before:{close_date}"
 
     payload = {
-        "model": "sonar-reasoning-pro",
+        "model": model,
         "messages": [
             {
                 "role": "system",
@@ -137,7 +138,7 @@ async def execute_search(
     usage = data.get("usage", {})
     if usage:
         await track_api_cost(
-            _handler, "perplexity", "sonar-reasoning-pro",
+            _handler, "perplexity", model,
             usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0),
         )
 

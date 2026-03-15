@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import re
 
@@ -93,21 +94,24 @@ async def supervise(
 
     search_decision_text = search_decision.content[0].text
 
-    # Extract search queries
+    # Extract search queries and run them in parallel
     targeted_searches: list[SearchResult] = []
     try:
         match = re.search(r'\[.*?\]', search_decision_text, re.DOTALL)
         if match:
             queries = json.loads(match.group())
-            for q in queries[:MAX_SUPERVISOR_SEARCH_ROUNDS]:
-                if isinstance(q, dict) and q.get("query"):
-                    await _handler.handle(PipelineEvent(
-                        event_type=EventType.SUPERVISOR_SEARCH,
-                        question_id=question.question_id, stage=Stage.SUPERVISOR,
-                        data={"query": q["query"]},
-                    ))
-                    result = await execute_search(q["query"], question.close_date, handler=_handler, question_title=question.title)
-                    targeted_searches.append(result)
+            valid_queries = [q for q in queries[:MAX_SUPERVISOR_SEARCH_ROUNDS] if isinstance(q, dict) and q.get("query")]
+            for q in valid_queries:
+                await _handler.handle(PipelineEvent(
+                    event_type=EventType.SUPERVISOR_SEARCH,
+                    question_id=question.question_id, stage=Stage.SUPERVISOR,
+                    data={"query": q["query"]},
+                ))
+            results = await asyncio.gather(*[
+                execute_search(q["query"], question.close_date, handler=_handler, question_title=question.title, model="sonar-pro")
+                for q in valid_queries
+            ])
+            targeted_searches.extend(results)
     except (json.JSONDecodeError, KeyError):
         pass  # No valid search queries found — proceed without
 

@@ -328,7 +328,7 @@ async def _run_agentic_search(
                 event_type=EventType.SEARCH_START, question_id=question.question_id,
                 agent_id=agent_id, stage=Stage.RESEARCH, data={"query": decision["query"]},
             ))
-            result = await execute_search(decision["query"], close_date, api_key, handler=_handler, question_title=question.title)
+            result = await execute_search(decision["query"], close_date, api_key, handler=_handler, question_title=question.title, model="sonar-pro")
             await _handler.handle(PipelineEvent(
                 event_type=EventType.SEARCH_DONE, question_id=question.question_id,
                 agent_id=agent_id, stage=Stage.RESEARCH, data={"query": decision["query"]},
