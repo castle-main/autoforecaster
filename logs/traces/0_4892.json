@@ -1,0 +1,582 @@
+{
+  "question": {
+    "post_id": 4892,
+    "question_id": 4892,
+    "id": "metaculus_4892",
+    "source": "metaculus",
+    "url": "https://www.metaculus.com/questions/4892/",
+    "title": "Will transformer derived architectures still be state of the art for language modeling in December 2025?",
+    "description": "",
+    "resolution_criteria": "",
+    "created_date": "2020-07-27",
+    "close_date": "2025-12-01",
+    "resolved_date": "2026-01-12",
+    "outcome": 1,
+    "community_prediction_final": 0.99,
+    "num_forecasters": 69,
+    "tags": [
+      "Artificial Intelligence"
+    ],
+    "domain": "technology_policy"
+  },
+  "agent_traces": [
+    {
+      "agent_id": 1,
+      "question_id": 4892,
+      "model_id": "gpt-5.4",
+      "decompose": {
+        "sub_questions": [
+          "What is the historical base rate of paradigm shifts in state-of-the-art language modeling architectures over 1- to 3-year windows, and how often have dominant architectures been displaced by non-descendant approaches?",
+          "What exactly would count as a 'transformer derived architecture' versus a genuinely new non-transformer paradigm for this question, and which frontier contenders currently sit near that boundary (e.g., state space models, recurrent hybrids, retrieval-heavy systems, diffusion/other alternatives)?",
+          "What recent developments in 2024-2025 suggest meaningful performance gains from non-transformer or weakly transformer-dependent architectures on frontier language modeling benchmarks, especially scaling behavior, inference efficiency, and long-context performance?",
+          "What mechanism would need to occur by December 2025 for the resolution to be Yes or No: would a non-transformer architecture need to beat transformers on standard next-token language modeling quality, on overall flagship-model reputation, or on cost-adjusted deployment performance?",
+          "What incentives and constraints are shaping frontier lab choices through 2025\u2014compute availability, training infrastructure, software ecosystem lock-in, compatibility with existing scaling recipes, and willingness to risk architectural change near product cycles?",
+          "Are leading labs and experts currently signaling active migration away from transformers, or are they instead extending transformers with hybrid modifications that preserve transformer centrality through end-2025?"
+        ],
+        "initial_search_queries": [
+          "2025 non-transformer language model state of the art benchmark state space model transformer alternative",
+          "2024 2025 frontier AI labs architecture transformer hybrid recurrent state space expert analysis",
+          "historical architecture shifts language modeling LSTM transformer timeline base rate paradigm change",
+          "December 2025 resolution criteria transformer-derived architecture forecasting question language modeling"
+        ],
+        "reasoning": "The key uncertainty is not just raw model quality, but whether any non-transformer paradigm can surpass transformer-derived systems quickly enough to matter by December 2025. The most decision-relevant cruxes are: base rates of architectural turnover; definitional boundaries around 'transformer-derived'; recent empirical evidence from alternative architectures; the practical mechanism by which a new architecture would become recognized as state of the art; and ecosystem incentives that favor or impede switching. Together these sub-questions capture both technical feasibility and real-world adoption dynamics, which are likely more important than isolated benchmark claims."
+      },
+      "research": {
+        "key_findings": [
+          "The only clearly documented major architecture regime change in modern language modeling over the last decade is the 2017 shift from RNN/LSTM-family models to Transformers; since then, frontier language modeling has remained transformer-dominated through the evidence provided.",
+          "Mamba/state space models are the strongest non-transformer contender in the current evidence: they reportedly rival Transformers on some language tasks and offer computational advantages via selective input-dependent state updates, but the search results do not provide direct evidence that they surpass frontier transformer LMs on standard flagship benchmarks.",
+          "Diffusion-based language models such as LLaDA are described as promising alternatives that enable parallel generation, but the current evidence lacks benchmark data showing they outperform state-of-the-art transformer-based LMs in language modeling quality.",
+          "The available evidence on frontier lab behavior points more toward hybridization and transformer-adjacent extensions than clear migration to a wholly new paradigm; the search results explicitly note lack of detailed technical evidence for labs abandoning transformers.",
+          "A critical unresolved issue is operationalizing the resolution criterion: whether 'state of the art for language modeling' means best next-token loss/benchmark quality, best flagship-model reputation, or best cost-adjusted deployment performance. This ambiguity materially affects the forecast.",
+          "Current searches are insufficiently evidentiary: they contain broad historical narrative and promising alternatives, but not direct 2024-2025 benchmark comparisons, expert/lab signals, or clear market adoption evidence needed for a robust estimate."
+        ],
+        "evidence_for": [
+          "Historical inertia favors Yes: only one major LM architecture displacement is evidenced in recent decades (RNN/LSTM to Transformer in 2017), suggesting low base rate of paradigm turnover on 1-3 year horizons. Strength: indirect but relevant historical evidence.",
+          "Mamba 'rivals Transformers' rather than clearly beats them, implying non-transformer alternatives may remain challengers rather than replacements by Dec 2025. Strength: moderately direct statement, but lacks cited benchmark specifics.",
+          "Frontier lab signals in the provided evidence emphasize hybrid approaches, LAMs, and LCMs rather than a clean break from transformers, which supports continued transformer centrality. Strength: weak-to-moderate, because source detail is limited.",
+          "Search results explicitly state missing benchmark comparisons quantifying superiority of non-transformer models in 2025; absent strong contrary evidence, default assumption leans toward incumbent transformer-derived SoTA persisting. Strength: inference from absence of evidence, weak alone but relevant in frontier forecasting."
+        ],
+        "evidence_against": [
+          "Mamba represents a genuine non-transformer alternative with architectural innovations and reported competitiveness on language tasks, showing there is at least a plausible pathway for displacement. Strength: moderate, though not direct evidence of SoTA takeover.",
+          "Diffusion-based language models like LLaDA are emerging in 2025 and may offer qualitatively different generation properties (parallel generation), which could matter if the resolution uses deployment efficiency or system-level performance rather than pure next-token quality. Strength: weak-to-moderate; speculative without comparative data.",
+          "The historical record includes at least one dramatic architecture replacement (Transformers displacing RNN/LSTMs), showing paradigm shifts can happen rapidly once a superior scaling/computation recipe appears. Strength: moderate historical analogy, but only one strong case in the supplied evidence."
+        ],
+        "search_trace": {
+          "rounds": [
+            {
+              "round_number": 1,
+              "query": "2025 non-transformer language model state of the art benchmark state space model transformer alternative",
+              "result": {
+                "query": "2025 non-transformer language model state of the art benchmark state space model transformer alternative",
+                "content": "**Mamba**, a state space model (SSM) architecture, represents the leading non-transformer alternative as of 2025. The Mamba architecture achieved breakthrough performance by introducing a **selection mechanism that makes state updates input-dependent**, allowing the model to selectively propagate or forget information based on the current token.[1] This enables the recurrent mechanism to dynamically focus on salient tokens and compress away irrelevant information.\n\nThe significance of Mamba lies in its ability to **rival Transformers in language-related tasks** while offering distinct computational advantages.[1] Unlike earlier SSMs with fixed, time-invariant transition matrices, Mamba's input-dependent mechanism fundamentally improves how it processes sequential information, making it competitive with the transformer paradigm that has dominated language modeling since 2017.\n\nBeyond state space models, **diffusion-based language models** emerged as another promising transformer alternative in 2025. LLaDA (Large Language Diffusion Models) introduces a masked diffusion model specifically designed for text, where tokens are progressively masked in the forward process and recovered by a mask predictor in the reverse process, allowing **parallel text generation rather than sequential token-by-token generation**.[1] [REDACTED: outcome information removed][4]\n\nHowever, specific benchmark comparisons quantifying how Mamba and diffusion models perform relative to transformer-based state-of-the-art models in 2025 are not detailed in the available sources, limiting precise performance claims.",
+                "citations": [
+                  "https://www.apolo.us/blog-posts/beyond-transformers-promising-ideas-for-future-llms",
+                  "https://proffiz.com/large-language-models-in-2025/",
+                  "https://www.pass4sure.com/blog/the-rise-of-large-language-models-whats-new-in-2025/",
+                  "https://magazine.sebastianraschka.com/p/state-of-llms-2025",
+                  "https://dev.to/arkacoc13/mastering-ai-language-models-from-nlp-foundations-to-2025-innovations-3b2b",
+                  "https://www.instaclustr.com/education/open-source-ai/top-10-open-source-llms-for-2025/",
+                  "https://www.youtube.com/watch?v=5Aer7MUSuSU",
+                  "http://oreateai.com/blog/beyond-the-hype-what-2025-really-meant-for-large-language-models/6ae188e90f49c88ef6c55054cddc1335",
+                  "https://codingscape.com/blog/most-powerful-llms-large-language-models"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 2,
+              "query": "2024 2025 frontier AI labs architecture transformer hybrid recurrent state space expert analysis",
+              "result": {
+                "query": "2024 2025 frontier AI labs architecture transformer hybrid recurrent state space expert analysis",
+                "content": "The search results provided contain limited technical depth on frontier AI architecture approaches, focusing instead on corporate developments and high-level organizational trends rather than detailed analysis of transformer variants, hybrid models, or state space architectures.\n\n## What the Search Results Cover\n\nThe most relevant architectural information discusses **emerging model classes beyond traditional transformers**. According to the FTI Consulting report, frontier labs in 2025 are developing **Large Action Models (LAMs) and Large Concept Models (LCMs)** as modifications to foundational models \"to support action-oriented responses and more complex reasoning in support of agentic frameworks.\"[4] Examples include Salesforce's xLAM for their Agentforce platform and Meta's research on improving abstract reasoning through LCMs.[4]\n\nAdditionally, the sources highlight **hybrid AI model approaches** as a key R&D activity, where companies combine different model types \"to serve increasingly complex applications.\"[4] [REDACTED: outcome information removed][4]\n\n## Search Result Limitations\n\nThe provided sources do not contain detailed technical analysis of:\n- Transformer architecture innovations or variants\n- Hybrid recurrent-transformer approaches\n- State space models or their applications\n- Comparative architectural performance metrics\n\nFor comprehensive expert analysis on these specific technical topics, you would need sources focused on AI architecture research papers, technical blogs from frontier labs, or academic publications specializing in model design and efficiency\u2014which are not represented in these search results.",
+                "citations": [
+                  "https://cheatsheets.davidveksler.com/ai-frontier.html",
+                  "https://www.microsoft.com/en-us/worklab/work-trend-index/2025-the-year-the-frontier-firm-is-born",
+                  "https://www.alpha-matica.com/post/the-architecture-of-trust-four-foundational-pillars-of-frontier-ai-safety-december-2025",
+                  "https://www.fticonsulting.com/insights/articles/frontiers-ai-research-2025",
+                  "https://bfl.ai",
+                  "https://www.christophersanchez.ai/the-ai-frontier/scaling-up-and-reining-in-artificial-intelligence-oct-27-2025",
+                  "https://ai-frontiers.org/articles/the-hidden-ai-frontier",
+                  "https://browsewiz.com/blog/the-frontier-of-intelligence-comparing-top-generative-ai-models-in-2025"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 3,
+              "query": "historical architecture shifts language modeling LSTM transformer timeline base rate paradigm change",
+              "result": {
+                "query": "historical architecture shifts language modeling LSTM transformer timeline base rate paradigm change",
+                "content": "The most significant architectural shift in language modeling was the transition from **recurrent neural networks (RNNs/LSTMs) to Transformers in 2017**, which fundamentally changed how language models process and understand text[1][3].\n\n## Early Era: Statistical to Neural Models (1950s\u20132010s)\n\nLanguage modeling began in the 1950s with **n-gram statistical models** based on information theory, which calculated word occurrence probabilities[1][3]. This approach was limited to basic word-level predictions and couldn't capture semantic meaning[1].\n\nBy the 1980s, IBM developed early statistical models using dictionaries to predict the next word[4]. The field advanced significantly in 1997 with **Long Short-Term Memory (LSTM) networks**, which could process sequential data while retaining information over longer periods[3]. This represented a major breakthrough for handling temporal dependencies in text, though LSTMs still struggled with long-range dependencies across distant words in sequences[1].\n\n## The Transformer Revolution (2017 onwards)\n\nGoogle's 2017 paper \"Attention Is All You Need\" introduced the **Transformer architecture**, which revolutionized the field[3]. Unlike RNNs that process sequences one element at a time, Transformers use **self-attention mechanisms to process entire sequences in parallel** while capturing relationships between any elements regardless of distance[1][3]. This architectural innovation proved remarkably scalable\u2014larger models trained on more data consistently demonstrated improved capabilities[3].\n\n## Modern LLM Era (2018\u20132023)\n\nThe Transformer architecture enabled rapid scaling of production models:\n\n- **BERT (2018)**: 340 million parameters with bidirectional encoding[3]\n- **GPT-1 (2018)**: 120 million parameters demonstrating transfer learning and few-shot capabilities[1]\n- **GPT-2 (2019)**: 1.5 billion parameters enabling coherent long-form text generation[1][3]\n- **GPT-3 (2020)**: 175 billion parameters with in-context learning, representing a quantum leap in capabilities[1][3]\n\nEach successive generation demonstrated emergent abilities like code generation, mathematical reasoning, and sophisticated conversation\u2014capabilities absent in earlier architectures[1].\n\nThis transition from sequential processing to parallel attention-based mechanisms fundamentally changed what was technically possible in language modeling, establishing the paradigm that has dominated the field since 2017[3].",
+                "citations": [
+                  "https://zenn.dev/su8/articles/343a3c4a1bb62c?locale=en",
+                  "https://timelines.issarice.com/wiki/Timeline_of_large_language_models",
+                  "https://toloka.ai/blog/history-of-llms/",
+                  "https://www.dataversity.net/articles/a-brief-history-of-large-language-models/",
+                  "https://lifearchitect.ai/timeline/",
+                  "https://devot.team/blog/history-of-large-language-models",
+                  "https://arxiv.org/html/2402.06853v3",
+                  "https://pub.towardsai.net/the-epic-history-of-large-language-models-llms-9c8c17fbea85",
+                  "https://www.youtube.com/watch?v=t9FmmofNQyo"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": false
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 4,
+              "query": "December 2025 resolution criteria transformer-derived architecture forecasting question language modeling",
+              "result": {
+                "query": "December 2025 resolution criteria transformer-derived architecture forecasting question language modeling",
+                "content": "I'm unable to provide a meaningful answer because your query is unclear. The phrasing \"December 2025 resolution criteria transformer-derived architecture forecasting question language modeling before:2025-12-01\" doesn't form a coherent question.\n\nCould you clarify what you're asking? For example, are you asking about:\n\n- **Transformer architectures for forecasting** in general (which the search results do address)?\n- **Specific performance criteria** for transformer models in forecasting tasks?\n- **Language modeling applications** versus time-series forecasting applications?\n- **A particular study or benchmark** from December 2025?\n\nProviding a clear, complete question will help me deliver an accurate and useful answer based on the search results provided.\n\n---\n\n**Assessment:** No contamination detected. The search content contains no sentences that reveal what actually happened after the close date (2025-12-01). It only contains a request for clarification about an unclear query, with no outcome information about transformer architectures or language modeling performance.",
+                "citations": [
+                  "https://www.jait.us/articles/2025/JAIT-V16N5-623.pdf",
+                  "https://www.frontiersin.org/journals/earth-science/articles/10.3389/feart.2025.1530475/full",
+                  "https://arxiv.org/html/2507.13043v1",
+                  "https://pmc.ncbi.nlm.nih.gov/articles/PMC12453695/",
+                  "https://jytan.net/blog/2025/transformer-architectures/",
+                  "https://icml.cc/virtual/2025/poster/44262",
+                  "https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2025GL116707?af=R"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": false
+              },
+              "reasoning": "Initial query from decomposition"
+            }
+          ],
+          "total_citations": 33
+        },
+        "information_gaps": [
+          "Direct 2024-2025 benchmark comparisons between top transformer-derived models and top non-transformer models (e.g., Mamba variants, RWKV, diffusion LMs) on standard language modeling metrics such as perplexity, benchmark suites, and downstream evals.",
+          "Clear definition of 'transformer derived architecture' for boundary cases: hybrids with attention removed in parts, state space + attention hybrids, retrieval-augmented systems, MoE transformers, and recurrent/SSM models initialized or trained with transformer recipes.",
+          "Evidence on whether any frontier lab has committed major training runs to a mostly non-transformer architecture for flagship LMs in 2025, versus exploratory side projects only.",
+          "Information on scaling laws and training stability for non-transformer contenders at frontier compute budgets, not just small/mid-scale demonstrations.",
+          "Evidence on deployment economics: whether non-transformer models materially outperform transformers on cost-adjusted inference, long-context serving, or memory footprint in ways likely to redefine 'state of the art'.",
+          "Expert commentary or lab statements from 2024-2025 on the likelihood/timing of post-transformer transition in language modeling.",
+          "Because these gaps are decision-critical and current evidence is thin, a high-value follow-up search would be: '2024 2025 Mamba RWKV diffusion language model benchmark GPT frontier transformer comparison scaling laws long context'"
+        ]
+      },
+      "base_rate": {
+        "reference_classes": [
+          "Major architecture regime changes in frontier language modeling over the last ~10 years (e.g., RNN/LSTM to Transformer, then persistence of transformers thereafter)",
+          "1-3 year horizons where incumbent frontier ML architectures remain state of the art despite credible challengers",
+          "Cases where promising non-transformer LM alternatives (state space models, diffusion language models, hybrids) achieve competitiveness without clearly displacing frontier transformer-based models",
+          "Frontier lab adoption behavior for core LM architectures, which tends to favor transformer-derived hybrids/extensions over abrupt full-paradigm replacement"
+        ],
+        "base_rate_estimate": 0.78,
+        "reasoning": "The strongest base-rate reference class is architecture persistence in frontier language modeling: over roughly the last decade, the evidence shows one major shift (to Transformers in 2017) followed by sustained transformer dominance. That suggests paradigm replacement on a sub-3-year horizon is uncommon. A second relevant reference class is incumbent persistence in ML more broadly when challengers are promising but not yet decisively superior on flagship benchmarks; this also favors continuation. A third class is specifically non-transformer LM challengers such as state space or diffusion approaches: current evidence suggests competitiveness and interesting advantages, but not a demonstrated takeover of top language-model quality. Finally, frontier labs usually adopt hybridization before full replacement, which raises the chance that even successful alternatives remain 'transformer-derived' or transformer-adjacent by Dec 2025. Balancing these, the base rate for transformers or transformer-derived architectures still being SoTA by Dec 2025 is high but not overwhelming, because the field can occasionally undergo rapid shifts and the resolution criterion is ambiguous. A reasonable pre-inside-view base rate is about 0.78."
+      },
+      "inside_view": {
+        "factors_for": [
+          "Historical regime persistence is the strongest pro-Yes factor: since the 2017 transformer transition, frontier language modeling has remained transformer-dominated, and 1-3 year horizons usually favor incumbent architectures unless there is clear benchmark superiority from a challenger. Strong relevance, fairly reliable, somewhat already reflected in the base rate but still supported by current specifics.",
+          "Current non-transformer challengers in the provided evidence, especially Mamba/state-space models, are described as competitive or rivaling transformers on some tasks, not clearly surpassing frontier transformer language models on flagship benchmarks. This is moderately direct and fairly informative.",
+          "Frontier lab behavior in the evidence points toward hybridization and transformer-adjacent modifications rather than wholesale abandonment of transformers. This is moderately relevant because adoption decisions at frontier labs are a leading indicator of what will be SoTA by Dec 2025.",
+          "Lack of direct evidence that diffusion LMs, RWKV, or other alternatives have overtaken transformers at frontier scale is weak on its own, but in a fast-moving field one might expect at least some strong signal if displacement were already underway. Mild update toward Yes."
+        ],
+        "factors_against": [
+          "There are real credible alternatives: Mamba/state-space approaches offer architectural advantages, especially around efficiency and long-context handling, so there is a plausible route to a non-transformer breakthrough before Dec 2025. Moderately strong, though not yet decisive.",
+          "Diffusion-style language models could win under a broader interpretation of 'state of the art' that emphasizes deployment characteristics, parallel generation, or system-level performance rather than pure next-token modeling quality. This matters mainly because the resolution criterion is ambiguous.",
+          "Historical precedent shows architecture changes can happen abruptly once a superior recipe appears; the transformer takeover itself is evidence that low-frequency events can still happen quickly. Useful cautionary factor, though only loosely predictive for this short horizon.",
+          "The evidence base is thin and lacks direct 2024-2025 head-to-head frontier benchmark comparisons, so confidence in incumbent persistence should be tempered; absence of evidence is not strong evidence of absence."
+        ],
+        "inside_view_estimate": 0.82,
+        "reasoning": "Relative to the 78% base rate, the specific evidence supports a modest upward update, not a dramatic one. The strongest concrete point is that the current challengers named in the evidence appear promising but not clearly superior on frontier language modeling quality, and frontier labs seem to be extending or hybridizing transformers rather than replacing them. Those are direct indicators for the Dec 2025 endpoint. The main reasons not to go much higher are that credible alternatives do exist, architecture shifts can be nonlinear, and the resolution criterion is ambiguous enough that efficiency-centric alternatives could matter. Overall, the inside view is that incumbent transformer-derived architectures remain more likely than not to stay SoTA through Dec 2025, with only a moderate chance of a non-transformer upset."
+      },
+      "synthesis": {
+        "base_rate_weight": 0.65,
+        "adjustment_reasoning": "The base rate is highly relevant here because the reference class\u2014architecture persistence at the frontier of language modeling over a roughly 1-2 year horizon\u2014is strong, and paradigm replacement has historically been infrequent. The inside view points in the same direction, but only modestly more strongly: current challengers appear promising rather than decisively superior, and frontier labs seem to be pursuing transformer extensions and hybrids rather than outright replacement. Because much of that evidence is already partly captured in the base rate, I give the base rate somewhat more weight than the inside view. Numerically, blending 78% with 82% at about 65% weight on the base rate yields roughly 79-80%, so I round to 0.80.",
+        "final_probability": 0.8,
+        "confidence_reasoning": "80% is high enough to reflect incumbent persistence and the lack of a clearly superior non-transformer contender, but not so high as to ignore the real possibility of a rapid architectural shift or an ambiguity in what counts as 'state of the art' by Dec 2025. I would not go much above the low 80s without direct frontier-scale evidence that alternatives remain behind through 2025. I would go lower if there were stronger signs that state-space, diffusion, or other non-transformer models were matching or beating top transformer-derived systems on flagship LM quality or deployment-relevant performance at scale."
+      },
+      "raw_probability": 0.8
+    },
+    {
+      "agent_id": 0,
+      "question_id": 4892,
+      "model_id": "claude-opus-4-6",
+      "decompose": {
+        "sub_questions": [
+          "What is the base rate for major architectural paradigm shifts in deep learning, and how long do dominant architectures typically remain state of the art?",
+          "What are the most promising non-transformer architectures (e.g., state space models like Mamba, RWKV, xLSTM) and how close are they to matching transformer performance on standard language modeling benchmarks as of mid-2025?",
+          "What recent developments have there been in transformer alternatives that show competitive or superior performance on large-scale language modeling tasks?",
+          "What would 'state of the art' mean mechanistically \u2014 would a hybrid architecture (e.g., transformer + SSM) count as 'transformer derived', and how is the resolution criterion defined?",
+          "Are major AI labs (OpenAI, Google DeepMind, Anthropic, Meta) investing significantly in non-transformer architectures for their frontier models, or are they doubling down on transformer variants?"
+        ],
+        "initial_search_queries": [
+          "Mamba state space model vs transformer language modeling benchmark 2025",
+          "non-transformer architecture state of the art language model 2025",
+          "frontier AI models architecture 2025 OpenAI Google DeepMind Anthropic",
+          "transformer alternatives language modeling performance comparison 2024 2025"
+        ],
+        "reasoning": "The key uncertainty here is whether any non-transformer architecture can displace transformers at the frontier of language modeling within the remaining months before December 2025. The base rate for architectural paradigm shifts is important \u2014 transformers have dominated since ~2017, and previous dominant architectures (RNNs/LSTMs) held for several years. The most critical crux is whether alternatives like Mamba/SSMs or hybrid architectures have demonstrated competitive performance at scale, since most evidence suggests transformers still lead on large-scale benchmarks. Another crucial factor is what major labs are actually deploying \u2014 if all frontier labs are still using transformer variants, displacement by December 2025 is very unlikely. The definitional question about what counts as 'transformer derived' matters significantly: if hybrid architectures (mixing attention with SSM layers) count as transformer-derived, the probability of Yes resolution increases substantially."
+      },
+      "research": {
+        "key_findings": [
+          "Transformer-based models remain the foundation of all frontier AI models from major labs (OpenAI GPT-5.1, Google Gemini 3 Pro, Anthropic Claude Opus 4.5, xAI Grok 4.1) as of 2025, with innovations focused on MoE, routing, and efficiency rather than replacing the transformer architecture.",
+          "The most promising non-transformer alternative, Mamba/state space models, shows superior efficiency (up to 3x throughput) but weaker performance on tasks requiring precise recall and in-context learning compared to transformers.",
+          "Hybrid architectures (e.g., Jamba, Nemotron-H) that combine Mamba/SSM blocks with transformer attention layers partially bridge the performance gap but don't systematically surpass pure transformers on standard benchmarks.",
+          "No non-transformer architecture has achieved state-of-the-art performance on major language modeling benchmarks - alternatives remain in experimental or research phases.",
+          "Frontier labs are investing in transformer variants (sparse MoE, smart routing, extended thinking) rather than abandoning the transformer paradigm, indicating strong institutional momentum.",
+          "Diffusion-based text models like LLaDA represent an interesting research direction but remain experimental and have not displaced transformers at scale.",
+          "The dominant innovation strategy in 2025 is sparse compute allocation, efficiency optimization, and architectural refinements within the transformer framework, not wholesale architectural replacement."
+        ],
+        "evidence_for": [
+          "All major frontier models in 2025 (GPT-5.1, Gemini 3 Pro, Claude Opus 4.5, Grok 4.1) are transformer-derived architectures, with no lab deploying a non-transformer as their primary model.",
+          "Pure SSM/Mamba models remain 'significantly behind on tasks requiring strong copy or in-context learning capabilities' according to IBM Research.",
+          "Hybrid architectures that include transformer attention layers (Jamba, Nemotron-H) still rely on transformer components for their strongest performance, suggesting the transformer attention mechanism remains essential.",
+          "Historical base rate: major architectural paradigm shifts in deep learning are rare and take years - RNNs dominated for ~5 years before transformers displaced them, and the transformer has been dominant since 2017 (~8 years).",
+          "Non-transformer alternatives like LLaDA and Titans remain experimental and have not been scaled to frontier model sizes by any major lab.",
+          "Even efficiency-focused alternatives like Mamba are being incorporated as components within transformer-based architectures rather than replacing them entirely."
+        ],
+        "evidence_against": [
+          "Mamba achieves up to 3x higher throughput than equivalent transformers, suggesting efficiency pressure could eventually drive adoption of alternatives.",
+          "Hybrid architectures like Nemotron-H (92% Mamba2 blocks) blur the line between transformer and non-transformer - if such hybrids become dominant, classification becomes ambiguous.",
+          "LLaDA's bidirectional masked diffusion approach reportedly overcomes the 'reversal curse' and shows potential for better reasoning, suggesting transformers may have fundamental limitations.",
+          "Rapid pace of AI research means breakthroughs could emerge quickly - Mamba only appeared in late 2023 and has already spawned production-ready hybrids.",
+          "The question asks about December 2025, which is ~6 months away, providing some window for rapid advances."
+        ],
+        "search_trace": {
+          "rounds": [
+            {
+              "round_number": 1,
+              "query": "Mamba state space model vs transformer language modeling benchmark 2025",
+              "result": {
+                "query": "Mamba state space model vs transformer language modeling benchmark 2025",
+                "content": "Mamba state space models demonstrate **mixed results compared to Transformers** on 2025 language modeling benchmarks, with superior efficiency but weaker performance on tasks requiring precise recall and in-context learning.\n\n## Performance Trade-offs\n\n**Efficiency advantages**: Pure Mamba models achieve significantly higher throughput and memory efficiency. NVIDIA's Nemotron-H, which replaces 92% of its attention layers with Mamba2 blocks, achieves up to three times higher throughput than equivalent-size Transformers like LLaMA-3.1 and Qwen-2.5.[1] This efficiency stems from the absence of key-value caching\u2014where Transformers store complete sequence history in GPU memory, SSMs maintain a constant hidden state regardless of context length.[1]\n\n**Performance limitations**: [REDACTED: outcome information removed][1] IBM Research confirmed this pattern, finding that while \"pure SSM models match or exceed Transformers on many tasks, Mamba and Mamba-2 models remain significantly behind on tasks requiring strong copy or in-context learning capabilities.\"[1]\n\n**Hybrid architectures**: To address these limitations, hybrid models like Jamba (AI21) and Nemotron-H strategically reinjecting attention layers partially bridge the performance gap.[1] Jamba combines Mamba and Transformer blocks, achieving a 256k token context window with superior inference throughput.[1] However, even hybrids don't systematically reach pure Transformer scores on standard academic benchmarks\u2014they match on some metrics and exceed on efficiency-related ones, but don't dominate uniformly.[1]\n\n**Context window strength**: Mamba excels on tasks involving very long sequences (256k+ tokens) but struggles with precise recall of distant information.[1]",
+                "citations": [
+                  "https://www.askaibrain.com/en/posts/end-of-transformers-hybrids-attention-state-space-2025",
+                  "https://proceedings.iclr.cc/paper_files/paper/2025/file/b7216f4a324864e1f592c18de4d83d10-Paper-Conference.pdf",
+                  "https://goombalab.github.io/blog/2025/tradeoffs/",
+                  "https://ait-lab.vercel.app/story/survey-s4",
+                  "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-mamba-and-state",
+                  "https://arxiv.org/abs/2312.00752",
+                  "https://billionhopes.ai/state-space-models-ssms-alternatives-to-transformers-deep-diving-into-the-math-behind-mamba-and-s4-architectures/"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 2,
+              "query": "non-transformer architecture state of the art language model 2025",
+              "result": {
+                "query": "non-transformer architecture state of the art language model 2025",
+                "content": "Non-transformer architecture language models in 2025 remain largely in the experimental or research phase, with **Mamba** representing the most notable breakthrough, though transformer-based models still dominate state-of-the-art performance.[8]\n\n**Mamba and State Space Models**\n\nThe **Mamba architecture** is the most significant non-transformer innovation as of 2025.[2] This state space model (SSM) breakthrough, introduced by Gu and Dao in 2024, finally enables SSMs to rival transformers on language tasks through a key innovation: a **selection mechanism** that makes state updates input-dependent.[2] This allows the model to dynamically focus on important tokens and compress irrelevant information, rather than relying on fixed transition matrices used in earlier SSM approaches.[2] Mamba's efficiency in processing extremely long contexts\u2014including million-token sequences\u2014positions it as a computationally efficient alternative to transformers.[2]\n\n**Diffusion-Based Models**\n\nText diffusion models represent another promising non-transformer direction, though they remain experimental.[3] **LLaDA** (Large Language Diffusion Models), introduced in 2025, uses a masked diffusion approach specifically designed for text, progressively masking tokens and then recovering them through a reverse process.[2] [REDACTED: outcome information removed][3]\n\n**Titans with Explicit Memory**\n\nThe **Titans** architecture, featuring explicit memory mechanisms that enable learning of new information on-the-fly, is another proposed alternative being explored beyond the transformer paradigm.[2]\n\nDespite these innovations, transformer-based models remain the foundation of the most capable open-weight LLMs as of 2025.[8]",
+                "citations": [
+                  "https://proffiz.com/large-language-models-in-2025/",
+                  "https://www.apolo.us/blog-posts/beyond-transformers-promising-ideas-for-future-llms",
+                  "https://magazine.sebastianraschka.com/p/state-of-llms-2025",
+                  "https://www.pass4sure.com/blog/the-rise-of-large-language-models-whats-new-in-2025/",
+                  "https://news.mit.edu/2025/new-way-to-increase-large-language-model-capabilities-1217",
+                  "http://oreateai.com/blog/beyond-the-hype-what-2025-really-meant-for-large-language-models/6ae188e90f49c88ef6c55054cddc1335",
+                  "https://codingscape.com/blog/most-powerful-llms-large-language-models",
+                  "https://magazine.sebastianraschka.com/p/beyond-standard-llms",
+                  "https://hatchworks.com/blog/gen-ai/large-language-models-guide/"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 3,
+              "query": "frontier AI models architecture 2025 OpenAI Google DeepMind Anthropic",
+              "result": {
+                "query": "frontier AI models architecture 2025 OpenAI Google DeepMind Anthropic",
+                "content": "Frontier AI models in 2025 have shifted from simple scale increases to **intelligent architectural innovations**, with distinct design philosophies across OpenAI, Google, and Anthropic.[1][3]\n\n**OpenAI's GPT-5.1** features a **unified system architecture** built around smart compute allocation rather than monolithic scaling.[1] The model employs a smart router network that dynamically selects between instant response mode and deeper thinking mode based on query complexity, achieving median first-token latency of approximately 230ms.[1] It uses a sparse Mixture-of-Experts (MoE) design with 28 actively selected experts from a larger pool, reducing computational overhead by roughly 65% compared to dense models while improving reasoning accuracy from 79% to 87% on mathematical tasks.[1]\n\n**Google's Gemini 3 Pro** emphasizes **unified multimodal processing**, integrating text, voice, images, and video through consolidated pipelines rather than modality-specific systems.[1] This contrasts with earlier approaches that treated different input types separately.\n\n**Anthropic's Claude Opus 4.5** incorporates **agentic efficiency controls**, focusing on hierarchical agent systems for complex task decomposition.[1] The model incorporates extended thinking capabilities optimized for multi-step reasoning.[3]\n\n**xAI's Grok 4.1** distinguishes itself through **truth-seeking capabilities** as a core architectural principle.[1]\n\nBeyond individual models, the 2025 frontier architecture includes sophisticated layered systems.[2] Server-side routers classify intent and select appropriate model paths (language, coding, image generation, or agent workflows), allowing providers to route simpler queries to smaller models for cost efficiency.[2] An orchestrator coordinates multiple LLMs sequentially when needed, caching intermediate results and reintroducing them into context for subsequent steps.[2] Systems integrate tools for web search, calculation, code execution, and API connectors, with memory systems providing both short-term chat history and long-term retrieval from historical interactions.[2]\n\nThe broader trend indicates **sparse compute allocation, real-time adaptation, and efficiency optimization** have become primary drivers of performance improvements, replacing pure parameter scaling as the dominant innovation strategy.[1]",
+                "citations": [
+                  "https://kenhuangus.substack.com/p/frontier-ai-models-technical-deep",
+                  "https://www.modelanalysis.ai/p/anatomy-of-frontier-ai-systems-in",
+                  "https://browsewiz.com/blog/the-frontier-of-intelligence-comparing-top-generative-ai-models-in-2025",
+                  "https://cheatsheets.davidveksler.com/ai-frontier.html",
+                  "https://www.youtube.com/watch?v=DrE6Hamd9fQ",
+                  "https://www.oreateai.com/blog/navigating-the-ai-frontier-whats-next-for-large-language-models-in-2025/ece327e443848f2aaaf8a100170638f4"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": false
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 4,
+              "query": "transformer alternatives language modeling performance comparison 2024 2025",
+              "result": {
+                "query": "transformer alternatives language modeling performance comparison 2024 2025",
+                "content": "Several promising **transformer alternatives** emerged in 2024-2025, each addressing different limitations of standard transformer architectures:\n\n## Diffusion-Based Models\n\n**LLaDA** (Large Language Diffusion Models) introduces a masked diffusion approach for text generation[1]. Unlike traditional autoregressive models that generate tokens sequentially, diffusion models generate text in parallel, offering greater speed and control[1]. [REDACTED: outcome information removed][1]. Notably, LLaDA's bidirectional masked formulation overcomes the \"reversal curse,\" enabling better reasoning and in-context learning compared to standard LLMs[1].\n\n## Mamba: State Space Models\n\n**Mamba** represents a breakthrough in recurrent neural network-inspired architectures designed to extend context windows[1]. Key advantages include:\n\n- **Eliminates quadratic scaling**: Mamba's attention-free architecture removes the quadratic complexity limitation of standard transformers, enabling efficient processing of up to 1 million token sequences[1]\n- **Faster inference**: Mamba runs significantly faster than equivalent-sized transformers without sacrificing performance[1]\n- **Comparable scaling laws**: It maintains similar scaling laws as transformers in terms of accuracy versus model size and training compute[1]\n\nThe core innovation is a selection mechanism that makes state updates input-dependent, allowing the model to dynamically focus on important tokens while discarding irrelevant information[1].\n\n## Hybrid and Emerging Approaches\n\nBeyond these two primary alternatives, the 2024-2025 landscape includes **linear attention hybrids**, **world models** (environment simulators), and **Titans with explicit memory** that can learn new information at inference time[2]. These alternatives prioritize either efficiency or improved modeling performance, with particular focus on handling longer contexts and complex reasoning tasks[2].\n\nWhile transformers remain dominant through 2025, these architectures address fundamental constraints around context length, generation speed, and persistent memory\u2014with direct implications for reduced latency, lower compute costs, and enhanced reasoning capabilities[1].",
+                "citations": [
+                  "https://www.apolo.us/blog-posts/beyond-transformers-promising-ideas-for-future-llms",
+                  "https://towardsai.net/p/machine-learning/exploring-cutting-edge-alternatives-to-transformer-based-llms",
+                  "https://www.techtarget.com/whatis/feature/12-of-the-best-large-language-models",
+                  "https://www.youtube.com/watch?v=lONyteDR4XE",
+                  "https://www.techradar.com/computing/artificial-intelligence/best-llms"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            }
+          ],
+          "total_citations": 27
+        },
+        "information_gaps": [
+          "Whether any major lab has an unreleased non-transformer model that could launch before December 2025.",
+          "Exact definition of 'transformer derived' in the resolution criteria - whether hybrids with >90% non-transformer blocks (like Nemotron-H) would count.",
+          "Whether any non-transformer model has achieved #1 on major public benchmarks (MMLU, HumanEval, etc.) by mid-2025.",
+          "The pace of scaling for Mamba/SSM architectures - whether any lab is training a 100B+ parameter pure SSM model.",
+          "Whether the question resolves based on the single best model or on the general class of SOTA models."
+        ]
+      },
+      "base_rate": {
+        "reference_classes": [
+          "Historical duration of dominant neural network architectures (RNNs ~5 years, CNNs ~7 years for vision, Transformers ~8 years and counting)",
+          "Frequency of architectural paradigm shifts in ML within a 6-month window",
+          "Rate at which frontier labs switch their primary production architecture away from the current dominant paradigm",
+          "Historical persistence of SOTA architectures on language modeling benchmarks year-over-year"
+        ],
+        "base_rate_estimate": 0.97,
+        "reasoning": "Multiple reference classes converge strongly toward transformers remaining SOTA through December 2025:\n\n1. **Historical paradigm shift frequency**: Major architectural shifts in deep learning are rare events that take years to unfold. RNNs dominated sequence modeling for ~5 years before transformers displaced them (2014-2017), and even that transition took 1-2 years from the initial paper to widespread adoption. The transformer has been dominant since 2017 (~8 years). The base rate for a paradigm shift happening in any given 6-month window is very low, perhaps 5-10% per year, so ~2.5-5% for a 6-month period.\n\n2. **Current frontier lab deployment**: All major frontier labs (OpenAI, Google, Anthropic, xAI, Meta) are deploying transformer-derived architectures as their primary models. Historically, when all major players are aligned on an architecture and actively investing in scaling it, the probability of a complete displacement within 6 months is extremely low. No lab has even signaled plans to abandon transformers.\n\n3. **State of alternatives**: No non-transformer architecture has achieved SOTA on major language modeling benchmarks. Alternatives like Mamba/SSMs show efficiency advantages but performance deficits on key tasks. Hybrid architectures still rely on transformer attention components. The gap from \"promising research\" to \"displacing the dominant paradigm at frontier scale\" typically takes 2+ years.\n\n4. **Institutional momentum**: Training runs for frontier models take months to plan and execute. Even if a breakthrough non-transformer architecture were published today, it would take many months to scale, validate, and deploy at frontier scale.\n\nThe main uncertainty comes from the definitional ambiguity around hybrid architectures (e.g., Nemotron-H with 92% Mamba blocks but still using transformer attention). However, the question asks about \"transformer derived architectures,\" which would likely encompass such hybrids since they still derive from and include transformer components.\n\nWeighting these reference classes, the base rate for transformers remaining SOTA for language modeling through December 2025 is approximately 0.97."
+      },
+      "inside_view": {
+        "factors_for": [
+          "All frontier models in production as of mid-2025 (GPT-5.1, Gemini 3 Pro, Claude Opus 4.5, Grok 4.1) are transformer-derived - VERY STRONG, direct evidence",
+          "No non-transformer architecture has achieved SOTA on any major language modeling benchmark - STRONG, directly addresses the resolution criteria",
+          "Pure SSM/Mamba models have documented weaknesses in copy/recall/in-context learning tasks - MODERATE-STRONG, fundamental limitation that's hard to fix in 6 months",
+          "Even hybrid architectures (Jamba, Nemotron-H) rely on transformer attention components for peak performance, suggesting attention mechanism remains essential - MODERATE",
+          "Major labs are investing in transformer variants (MoE, routing, extended thinking) rather than pivoting to alternatives - STRONG institutional momentum signal",
+          "Only ~6 months remain until resolution, and architectural paradigm shifts historically take years to play out - VERY STRONG temporal constraint",
+          "Historical precedent: no architectural paradigm shift in deep learning has ever happened within a 6-month window from a standing start - STRONG"
+        ],
+        "factors_against": [
+          "Mamba achieves up to 3x throughput advantage, creating efficiency pressure - WEAK for this timeframe, efficiency alone hasn't displaced architectures quickly",
+          "Hybrid architectures like Nemotron-H (92% Mamba2 blocks) blur definitional boundaries - MODERATE, but question says 'transformer derived' which likely includes hybrids with transformer components",
+          "LLaDA shows potential to overcome transformer limitations like reversal curse - WEAK, still experimental and unscaled",
+          "Possibility of unreleased non-transformer model from a major lab - WEAK-MODERATE, speculative but cannot be ruled out; however even if such a model existed it would need to surpass current SOTA which is extremely unlikely given no public evidence",
+          "Rapid pace of AI research means surprises are possible - WEAK, generic uncertainty that applies to any question"
+        ],
+        "inside_view_estimate": 0.98,
+        "reasoning": "The evidence overwhelmingly favors transformers remaining SOTA for language modeling through December 2025. The key facts are: (1) Every single frontier model deployed in 2025 is transformer-based, (2) no alternative has achieved SOTA on any major benchmark, (3) the best alternatives (Mamba/SSMs) have documented fundamental weaknesses in key capabilities, (4) even hybrids that use mostly non-transformer blocks still include transformer attention for peak performance, and (5) only ~6 months remain for resolution.\n\nThe factors against are notably weak for this timeframe. Mamba's efficiency advantage is real but insufficient to displace transformers when it underperforms on capability benchmarks. The definitional ambiguity around hybrids is the strongest counterargument, but 'transformer derived' is a broad category that would likely include any architecture incorporating attention mechanisms. LLaDA and other experimental approaches are far too early-stage to scale to frontier performance by December 2025.\n\nThe only realistic scenario for a 'No' resolution would be: (1) a major lab has been secretly training a massive non-transformer model that surpasses all current SOTA, or (2) a breakthrough paper in the next few months leads to rapid scaling of an alternative that beats transformers. Both scenarios are extremely unlikely given the lead times involved in training frontier models (months of compute) and the current state of alternatives.\n\nI estimate 98%, slightly above the base rate of 97%, because the specific evidence from mid-2025 is even more confirmatory than what the base rate alone would suggest - we can actually see that no challenger is close to displacing transformers with only 6 months remaining."
+      },
+      "synthesis": {
+        "base_rate_weight": 0.4,
+        "adjustment_reasoning": "Both the base rate (97%) and inside view (98%) are closely aligned and mutually reinforcing. The base rate is derived from highly relevant reference classes (historical paradigm shift frequency, institutional momentum, scaling timelines), and the inside view adds specific mid-2025 evidence that further confirms the base rate's prediction. Since the inside view provides direct, strong, and specific evidence \u2014 we can actually observe the current state of all frontier models and the absence of any credible challenger with only 6 months remaining \u2014 I weight the inside view slightly more. The inside view nudges the probability up marginally from 97% because we're now close enough to the resolution date to have very high visibility into what's actually happening. There is no meaningful counter-evidence. The only realistic \"No\" scenario involves a secret massive non-transformer model that beats all current SOTA, which is extremely speculative. I arrive at ~97.5%, which I'll round to 0.97.",
+        "final_probability": 0.97,
+        "confidence_reasoning": "I'm highly confident at 97% because: (1) Every frontier model is transformer-based with no exceptions, (2) no alternative has come close to SOTA on major benchmarks, (3) only 6 months remain which is far too short for a paradigm shift given training timelines of months, (4) all major labs are doubling down on transformer variants rather than pivoting. I'm not going higher (e.g., 99%) because there's always some residual uncertainty: a secret project could exist, definitional ambiguity around hybrids could create edge cases in resolution, or an unexpected breakthrough could occur. I'm not going lower because the evidence is overwhelmingly one-directional \u2014 there is literally no publicly known non-transformer model that is competitive at the frontier, and the temporal constraint of 6 months makes displacement essentially impossible through normal research channels. I would comfortably bet real money at these odds."
+      },
+      "raw_probability": 0.97
+    },
+    {
+      "agent_id": 2,
+      "question_id": 4892,
+      "model_id": "gemini-3.1-pro-preview",
+      "decompose": {
+        "sub_questions": [
+          "Base Rate: Historically, how long is the lag between a novel architecture demonstrating theoretical superiority (e.g., early Transformers in 2017) and it actually displacing the previous paradigm at the absolute state-of-the-art scale (e.g., GPT-3 in 2020)?",
+          "Recent Developments: How do the scaling laws of the best current non-transformer models (e.g., Mamba, RWKV) compare to transformers at the 10B+ parameter scale, and are they showing signs of saturation?",
+          "Mechanism (Compute Allocation): Are any frontier AI labs (OpenAI, Anthropic, Google, Meta, xAI) currently committing the massive compute resources (tens of thousands of GPUs) required to train a pure non-transformer model to a frontier (SOTA) level?",
+          "Definitional Crux / Hybridization: Are the most successful alternative architectures (like Jamba) incorporating attention mechanisms or transformer blocks, such that they would still be classified as \"transformer-derived\"?"
+        ],
+        "initial_search_queries": [
+          "\"scaling laws\" AND (\"Mamba\" OR \"SSM\" OR \"RWKV\") vs transformers",
+          "major AI labs (OpenAI OR Google OR Anthropic OR Meta) training non-transformer \"state space models\"",
+          "hybrid architecture \"Jamba\" OR \"attention\" \"transformer-derived\" language models"
+        ],
+        "reasoning": "The core crux of this question is the massive compute barrier required to achieve state-of-the-art (SOTA) in language modeling. It is not enough for a new architecture to be theoretically better; it must be trained with tens of millions of dollars of compute by a major AI lab to actually dethrone models like GPT-4 or Claude 3. Therefore, identifying whether labs are *currently* allocating frontier-level compute to non-transformers is essential. Additionally, the definition of \"transformer-derived\" is a major crux: if the next SOTA is a hybrid of State Space Models (SSMs) and transformer attention layers (like AI21's Jamba), it likely still counts as transformer-derived. Understanding the base rate of architectural transitions and the current scaling curves of SSMs like Mamba will help determine if a complete architectural replacement is feasible by December 2025."
+      },
+      "research": {
+        "key_findings": [
+          "Pure State Space Models (SSMs) like Mamba have superior scaling laws in parameter efficiency and long sequences, but this has mostly been proven up to the 1B-3B parameter scale.",
+          "Frontier AI labs do not currently appear to be investing the tens of thousands of GPUs required to train a pure non-transformer model to SOTA scale.",
+          "Leading alternative large language models, such as Jamba (398B total parameters, 94B active), are adopting hybrid architectures rather than purely abandoning transformers.",
+          "These hybrid architectures interleave Transformer layers (attention) with Mamba layers to balance long-context efficiency with high accuracy and reasoning, classifying them effectively as 'transformer-derived'.",
+          "Given development timelines and the fact that pure SSMs are still being hybridized to maintain reasoning, it is highly probable that the absolute state-of-the-art model in December 2025 will contain transformer mechanisms."
+        ],
+        "evidence_for": [
+          "There is currently no public evidence that major frontier AI labs (OpenAI, Google, Anthropic, Meta) are dedicating the massive compute resources necessary to train pure non-transformer architectures to state-of-the-art scale (hundreds of billions of parameters).",
+          "The most successful non-transformer alternative, Jamba (up to 94B active parameters), relies on a hybrid architecture that includes Transformer attention layers to maintain accuracy and reasoning capabilities.",
+          "Because top alternative architectures are incorporating Transformer blocks to mitigate their own weaknesses, they remain 'transformer-derived', making it highly likely that the top SOTA model by December 2025 will still fit this classification.",
+          "The historical lag between theoretical proof of superiority and displacement at the absolute frontier scale (e.g., GPT-3 taking several years post-2017) suggests pure SSMs will not surpass top transformer models before late 2025."
+        ],
+        "evidence_against": [
+          "Mamba and other State Space Models (SSMs) demonstrate better scaling laws than transformers up to the 3B parameter mark, particularly outperforming them in parameter efficiency and long-sequence handling.",
+          "Pure SSMs maintain a fixed-size hidden state (O(1) memory per token), effectively bypassing the quadratic memory scaling bottlenecks associated with transformers.",
+          "In a tokenization-free, compute-matched setting (like DNA language modeling), SSMs have outperformed transformers consistently, indicating a genuine advantage in modeling power rather than just computational efficiency."
+        ],
+        "search_trace": {
+          "rounds": [
+            {
+              "round_number": 1,
+              "query": "\"scaling laws\" AND (\"Mamba\" OR \"SSM\" OR \"RWKV\") vs transformers",
+              "result": {
+                "query": "\"scaling laws\" AND (\"Mamba\" OR \"SSM\" OR \"RWKV\") vs transformers",
+                "content": "Mamba and selective state-space models (SSMs) demonstrate superior scaling laws compared to transformers, particularly for sequence length and parameter efficiency. With scaling laws up to 1B parameters, **Mamba exceeds the performance of a large range of transformer baselines**, including models trained with strong modern recipes like LLaMa[4]. A Mamba-3B model outperforms transformers of the same size and matches transformers twice its size in both pretraining and downstream evaluation[5].\n\nThe key scaling advantage lies in **sequence length efficiency**. Mamba's linear-time selective mechanisms enable processing of legal documents several times longer than transformers while maintaining or surpassing performance[1]. For sequences longer than a few thousand tokens, selective state-space blocks deliver major performance gains, with inference scaling linearly and providing up to 5\u00d7 lower latency once contexts exceed 2,000 tokens[3].\n\nWhen accounting for data rather than compute, SSMs demonstrate particularly strong scaling behavior. Research shows that **when matching Transformers for data instead of compute\u2014allowing Transformers to use many more FLOPs\u2014the SSM still outperforms it consistently**[6]. This indicates that the advantage isn't merely computational but reflects genuine modeling power. On DNA language modeling, Mamba scaled substantially better than transformers out-of-the-box in this \"tokenization-free\" setting with high-resolution input[6].\n\nThe memory scaling also differs fundamentally. While transformers require explicitly storing the entire context through a key-value cache (causing quadratic-time training), Mamba maintains a **fixed-size hidden state requiring O(1) memory per token**[3]. This architectural difference becomes increasingly significant as sequence length increases, enabling processing of longer documents on the same hardware.",
+                "citations": [
+                  "https://arxiv.org/abs/2509.00141",
+                  "https://blog.gopenai.com/deep-dive-into-mamba-rwkv-and-state-space-models-b45d5e6a38c9",
+                  "https://galileo.ai/blog/mamba-linear-scaling-transformers",
+                  "https://arxiv.org/pdf/2312.00752",
+                  "https://www.youtube.com/watch?v=9dSkvxS2EB0",
+                  "https://goombalab.github.io/blog/2025/tradeoffs/",
+                  "https://news.ycombinator.com/item?id=39173120"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": false
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 2,
+              "query": "major AI labs (OpenAI OR Google OR Anthropic OR Meta) training non-transformer \"state space models\"",
+              "result": {
+                "query": "major AI labs (OpenAI OR Google OR Anthropic OR Meta) training non-transformer \"state space models\"",
+                "content": "The search results provided do not contain information about major AI labs training non-transformer state space models before December 1, 2025. The sources focus primarily on transformer-based foundation models and their development, including DeepSeek R1, Llama, Qwen, and other models, but do not specifically discuss state space model research or training by OpenAI, Google, Anthropic, or Meta.\n\nTo answer your query comprehensively, I would need access to sources that specifically cover state space model research from these labs during that timeframe. You may want to search for technical papers from these organizations, their research blogs, or AI research publications that specifically focus on state space architectures and alternative transformer approaches.\n\n---\n\n**Assessment:** No contamination detected. The content discusses what information is *absent* from the search results and does not reveal any actual outcomes or resolutions regarding whether transformers remained state-of-the-art through December 2025.",
+                "citations": [
+                  "https://magazine.sebastianraschka.com/p/state-of-llms-2025",
+                  "https://www.bvp.com/atlas/the-state-of-ai-2025",
+                  "https://www.youtube.com/watch?v=QlrGr-D4vTg",
+                  "https://cdn.openai.com/pdf/7ef17d82-96bf-4dd1-9df2-228f7f377a29/the-state-of-enterprise-ai_2025-report.pdf",
+                  "https://openai.com/index/ten-years/",
+                  "https://www.interconnects.ai/p/state-of-open-models-2025"
+                ],
+                "filtered_citations": [
+                  "https://developers.redhat.com/articles/2026/01/07/state-open-source-ai-models-2025"
+                ],
+                "was_contaminated": false
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 3,
+              "query": "hybrid architecture \"Jamba\" OR \"attention\" \"transformer-derived\" language models",
+              "result": {
+                "query": "hybrid architecture \"Jamba\" OR \"attention\" \"transformer-derived\" language models",
+                "content": "**Jamba is a hybrid Transformer-Mamba mixture-of-experts (MoE) language model that combines the strengths of both architectural approaches to achieve superior efficiency and long-context handling.**[1][2]\n\n## Architecture Design\n\nJamba **interleaves blocks of Transformer and Mamba layers**, with MoE applied to some layers to increase model capacity while keeping active parameter usage manageable.[1] The architecture features a specific ratio where **one Transformer layer appears out of every eight total layers**, with the remaining seven being Mamba layers.[7] This configuration is referred to as a \"Jamba block.\"[3]\n\nThe hybrid approach leverages complementary strengths: **Mamba layers excel at managing long contexts with minimal computational overhead**, while **Transformer layers provide superior accuracy and reasoning capabilities.**[3]\n\n## Model Configurations\n\nTwo versions were released:[2]\n\n- **Jamba-1.5-Large**: 94B active parameters (398B total available parameters)\n- **Jamba-1.5-Mini**: 12B active parameters (52B total available parameters)\n\n## Key Performance Advantages\n\n**Extended context handling**: Jamba models support an effective context length of **256K tokens**, [REDACTED: outcome information removed][4][6]\n\n**Efficiency gains**: The hybrid architecture provides **high throughput and low memory footprint compared to vanilla Transformers**, particularly at long-context tasks.[4] Each Jamba block fits within a single NVIDIA H100 80GB GPU, with MoE applied every other layer using 16 experts (2 active per token).[3]\n\n**Functional capabilities**: Jamba-1.5 models support function calling and JSON data interchange, enabling complex downstream applications like loan term sheet generation and retrieval-augmented generation (RAG) tasks.[3]",
+                "citations": [
+                  "https://arxiv.org/abs/2403.19887",
+                  "https://arxiv.org/abs/2408.12570",
+                  "https://developer.nvidia.com/blog/jamba-1-5-llms-leverage-hybrid-architecture-to-deliver-superior-reasoning-and-long-context-handling/",
+                  "https://proceedings.iclr.cc/paper_files/paper/2025/file/a9ed43fa31dc8b4a7d7a673d713dcb5f-Paper-Conference.pdf",
+                  "https://www.youtube.com/watch?v=Kl2koPxNArA",
+                  "https://openreview.net/forum?id=JFPaD7lpBD",
+                  "https://huggingface.co/docs/transformers/model_doc/jamba",
+                  "https://www.ai21.com/jamba/"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            }
+          ],
+          "total_citations": 21
+        },
+        "information_gaps": [
+          "The explicit resolution criteria for what constitutes a 'transformer-derived' architecture (e.g., if a pure SSM with a single attention mechanism is trained, does it count?).",
+          "The precise architectural designs of upcoming frontier models (e.g., GPT-5, Gemini 2, Claude 4), as these are heavily guarded secrets by major labs.",
+          "How pure SSMs like Mamba empirically scale beyond the 10B parameter threshold without hybridizing with transformers."
+        ]
+      },
+      "base_rate": {
+        "reference_classes": [
+          "Lifespan of dominant deep learning architectures (e.g., CNNs, LSTMs, Transformers)",
+          "Adoption latency from introduction of a novel AI architecture to achieving absolute state-of-the-art scale",
+          "Frequency of complete architectural paradigm shifts in AI occurring within a 1.5 to 2 year window"
+        ],
+        "base_rate_estimate": 0.9,
+        "reasoning": "The base rate estimate is driven by the historical lifespan of dominant deep learning architectures (typically 4-10 years, e.g., CNNs in vision, LSTMs in NLP) and the adoption latency required for a new architecture to reach the absolute state-of-the-art (typically 3-5 years). Because scaling a new architecture to the frontier requires massive capital investment and custom hardware optimization, labs are generally risk-averse over short 1-2 year horizons. Furthermore, the inclusion of hybrid models as 'transformer-derived' means an entirely pure alternative must win to resolve negatively. Historically, hybrid or transitional architectures prolong the lifespan of the dominant paradigm. Thus, the base probability of the entrenched architecture persisting at the absolute frontier over a short-term horizon is very high."
+      },
+      "inside_view": {
+        "factors_for": [
+          "Capital risk at frontier scale: Training a state-of-the-art model costs hundreds of millions of dollars. Labs are extremely unlikely to completely abandon the highly predictable scaling laws of transformers for an unproven architecture by 2025.",
+          "Hybridization counts as derived: The most promising alternative models (like Jamba) interleave SSMs with transformer attention layers to maintain high reasoning capability. These hybrid models would still be classified as 'transformer-derived'.",
+          "Development latency: A model achieving absolute SOTA in December 2025 will likely need to begin training by early-to-mid 2025. The current lack of massive-scale pure SSMs suggests the timeline is too tight for a complete architectural displacement.",
+          "Hardware and ecosystem lock-in: The current AI compute ecosystem, including GPU optimizations and libraries (e.g., FlashAttention), is heavily tailored to transformers, creating significant friction against abandoning them entirely."
+        ],
+        "factors_against": [
+          "Superior SSM theoretical scaling: State Space Models (SSMs) like Mamba have demonstrated O(1) memory per token and outperform transformers up to the 3B parameter mark, which could prompt a sudden shift if scaling holds.",
+          "Long context bottlenecks: Transformers inherently struggle with extreme context lengths due to quadratic compute and memory scaling; an alternative architecture naturally solving this could leapfrog transformers in SOTA capabilities.",
+          "Secret frontier projects: A major AI lab could have already secretly proven non-transformer scaling laws internally and might be training a pure alternative architecture for release by late 2025."
+        ],
+        "inside_view_estimate": 0.95,
+        "reasoning": "The specific evidence heavily points toward 'Yes'. While pure State Space Models (SSMs) like Mamba show excellent theoretical properties and efficiency at smaller scales, achieving absolute state-of-the-art (SOTA) language modeling requires immense compute (100B+ parameters, trillions of tokens). Training at this frontier scale is highly capital-intensive and risk-averse, relying on predictable scaling laws. Currently, no major lab is known to be risking tens of thousands of GPUs on a pure non-transformer architecture. Furthermore, the timeline to December 2025 is very short considering the latency between architectural design, training, alignment, and deployment of a frontier model. Crucially, the most successful attempts to utilize SSMs at scale (like Jamba) rely on hybridizing with transformer attention layers to maintain reasoning capabilities. Since a hybrid model would logically be considered 'transformer-derived', an alternative architecture would have to completely abandon attention mechanisms while still beating models like GPT-5 or Gemini 2. This makes a complete architectural paradigm shift away from transformers by December 2025 extremely improbable."
+      },
+      "synthesis": {
+        "base_rate_weight": 0.3,
+        "adjustment_reasoning": "The base rate relies on the historical 4-10 year life cycles of dominant architectures, yielding a high 90% probability. However, the inside view provides highly specific and compelling constraints: current frontier models cost hundreds of millions of dollars to train, making labs heavily risk-averse and dependent on highly predictable transformer scaling laws. Furthermore, because 'hybrid' models (which interleave attention layers with state space models, like Jamba) would still count as 'transformer derived', a competitor would need to be a completely pure alternative to trigger a 'No' resolution. Given the 12-18 month lead time for frontier model development, the timeline to December 2025 is simply too short for a pure alternative to jump from sub-10B parameter experiments to absolute state-of-the-art. Therefore, I adjust upward from the base rate, weighting the specific inside view heavily.",
+        "final_probability": 0.96,
+        "confidence_reasoning": "A 96% probability reflects near certainty, leaving a 4% chance for a 'black swan' event (e.g., a major lab secretly proving pure SSM scaling laws and deploying a massive model that leapfrogs GPT-5/Claude 4). The massive hardware lock-in, software ecosystem (FlashAttention), and capital requirements make it exceptionally unlikely that a lab would bet its flagship training run on a completely unproven pure architecture before December 2025. I am not at 99% because unexpected algorithmic breakthroughs can happen and secret projects at top labs (e.g., DeepMind, OpenAI) may already be underway, but 96% captures the overwhelming inertia of the current paradigm."
+      },
+      "raw_probability": 0.96
+    }
+  ],
+  "supervisor": {
+    "agent_probabilities": [
+      0.8,
+      0.97,
+      0.96
+    ],
+    "disagreements": [
+      "Agent 1 (80%) is significantly lower than Agents 0 (97%) and 2 (96%), primarily due to Agent 1's emphasis on resolution criterion ambiguity and the possibility of rapid architectural shifts, while Agents 0 and 2 focus on concrete evidence of transformer dominance and institutional inertia.",
+      "Agent 1 gives more weight to the possibility that non-transformer alternatives (Mamba, diffusion models) could achieve SOTA under broader interpretations of 'state of the art' (e.g., cost-adjusted deployment performance), while Agents 0 and 2 interpret SOTA more narrowly as benchmark performance.",
+      "Agent 1 assigns a base rate of only 78% for transformer persistence, while Agent 0 assigns 97% and Agent 2 assigns 90%. The disagreement stems from how they weight the historical frequency of paradigm shifts vs. the specific temporal constraint (only ~6 months remaining).",
+      "Agents 0 and 2 explicitly note that hybrid architectures (Jamba, Nemotron-H) still incorporate transformer attention layers and would count as 'transformer derived', significantly narrowing the path to a 'No' resolution. Agent 1 acknowledges this but doesn't weight it as heavily."
+    ],
+    "targeted_searches": [
+      {
+        "query": "state of the art language model architecture 2025 transformer alternatives benchmark",
+        "content": "As of 2025, **Transformers remain the dominant architecture** for state-of-the-art large language models like GPT-4, Claude, and Gemini[1], but several promising alternatives have emerged that address specific architectural limitations.\n\n## Key Transformer Alternatives in 2025\n\n**Mamba** (Structured State-Space Models) offers **linear memory complexity** instead of the quadratic complexity of standard Transformers[3]. It enables efficient processing of very long sequences (up to 100k tokens) while remaining fully parallelizable and more hardware-friendly than self-attention[1]. The key innovation is an input-dependent selection mechanism that allows the model to dynamically focus on salient tokens and compress irrelevant information[3].\n\n**RWKV** merges RNNs and Transformers to achieve **O(n) memory complexity** rather than O(n\u00b2), enabling stateful inference beneficial for streaming use cases[1]. It also demonstrates strong multilingual capabilities, rivaling LLaMA across 100+ languages[1].\n\n**RetNet** (Retentive Networks) introduces a retention mechanism that achieves **O(1) constant-time inference** while maintaining smooth compatibility with Transformer-like APIs[1]. This makes it ideal for low-power AI deployments where GPU acceleration is limited[1].\n\n**Differential Transformers** use sparse attention by subtracting two attention maps to cancel noise, achieving 60% fewer parameters with improved robustness in noisy or ambiguous data[1].\n\n## Benchmark Data Limitations\n\nThe search results do not provide comprehensive benchmark comparisons between these architectures. However, they indicate that newer alternatives address specific use cases rather than universally outperforming Transformers[3]. Mamba and Titans are characterized as \"different approaches to adding memory to Transformers,\" suggesting they are complementary rather than wholesale replacements[3].\n\n## Practical Application Guidance\n\n[REDACTED: outcome information removed]",
+        "citations": [
+          "https://www.gocodeo.com/post/inside-transformers-attention-scaling-tricks-emerging-alternatives-in-2025",
+          "https://sease.io/2025/06/best-large-language-models-you-can-use-in-2025-full-guide.html",
+          "https://www.apolo.us/blog-posts/beyond-transformers-promising-ideas-for-future-llms",
+          "https://towardsai.net/p/machine-learning/exploring-cutting-edge-alternatives-to-transformer-based-llms",
+          "https://www.techtarget.com/whatis/feature/12-of-the-best-large-language-models",
+          "https://www.youtube.com/watch?v=lONyteDR4XE",
+          "https://www.youtube.com/watch?v=MfswBXmSPZU"
+        ],
+        "filtered_citations": [],
+        "was_contaminated": true
+      },
+      {
+        "query": "Nemotron-H Jamba hybrid transformer Mamba 2025 performance",
+        "content": "**Nemotron-H** is a family of hybrid Mamba-Transformer models that achieved **superior accuracy and up to 3\u00d7 faster inference speed** compared to similarly-sized state-of-the-art Transformer models in 2025.[1][4]\n\n## Architecture and Design\n\nNemotron-H uses a hybrid decoder-only architecture that strategically replaces most self-attention layers with Mamba-2 state-space modules. This design reduces the computational and memory overhead of traditional Transformers.[1][2] The specific layer composition varies by model size:\n\n- **Nemotron-H-8B**: 52 total layers with only 4 self-attention layers (\u22488%), interleaved with 24 Mamba-2 layers and 24 FFN layers[2]\n- **Nemotron-H-56B**: 118 total layers with 10 attention layers, 54 Mamba-2 layers, and 54 FFN layers[2]\n\nThe efficiency gains stem from Mamba-2's constant memory and computation requirements per token, eliminating the linear scaling problem of Transformer self-attention that depends on KV cache size.[1][4]\n\n## Performance Results\n\n[REDACTED: outcome information removed][4]\n\n- [REDACTED: outcome information removed][4]\n- **Nemotron-H-47B-Base** (a pruned and distilled variant) achieved approximately 2.9\u00d7 throughput improvement and matched the accuracy of the 56B model[2]\n- [REDACTED: outcome information removed][2]\n\n## Implementation Details\n\nThe models employ advanced optimization techniques including fine-grained neural architecture search, blockwise local distillation, and FP8 quantization for the 56B variant.[2][4] The 56B base model was the first Nemotron model fully pre-trained using FP8 precision across linear layers (except the first and last 4 layers, which remained in BF16).[4]",
+        "citations": [
+          "https://research.nvidia.com/labs/adlr/nemotronh/",
+          "https://www.emergentmind.com/topics/nemotron-h-architecture",
+          "https://ui.adsabs.harvard.edu/abs/2025arXiv250403624N/abstract",
+          "https://arxiv.org/pdf/2504.03624",
+          "https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Super-Technical-Report.pdf",
+          "https://thesalt.substack.com/p/nemotron-h-the-mambatransformer-models",
+          "https://huggingface.co/nvidia/Nemotron-H-4B-Base-8K",
+          "https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Nano-Technical-Report.pdf"
+        ],
+        "filtered_citations": [],
+        "was_contaminated": true
+      },
+      {
+        "query": "frontier AI lab architecture 2025 OpenAI Google Anthropic non-transformer",
+        "content": "The search results contain limited information specifically addressing frontier AI lab architectures across OpenAI, Google, and Anthropic in 2025. However, they do reveal significant developments in the frontier AI research landscape during this period.\n\n**Documented Frontier AI Initiatives in 2025:**\n\n[REDACTED: outcome information removed][1]. The lab's architectural focus includes agentic systems, data-centric machine learning, retrieval and grounding, reasoning and planning, evaluation and safety, and human-in-the-loop workflows[1]. The lab structure emphasizes joint research between industry and academia, with dedicated computing infrastructure, PhD-level talent pipelines, and access to high-quality domain-specific data[1].\n\nIn national security applications, [REDACTED: outcome information removed][2]. This represents an integration of frontier reasoning capabilities with large-scale computing infrastructure for scientific research[2].\n\n**Architectural Trends in Frontier Models:**\n\nThe frontier AI landscape in 2025 increasingly features **mixture-of-experts architectures**[4], with leading open-source models adopting this approach[4]. Research also shows hybrid approaches combining multiple model classes\u2014including rules-based systems, transformer architectures, diffusion models, and neural radiance fields\u2014to address complex problems in video generation, 3D understanding, and other domains[3].\n\nThe search results do not provide sufficient detail on specific architectural choices by Google, Anthropic, or comprehensive coverage of non-transformer approaches within frontier labs during 2025.",
+        "citations": [
+          "https://www.thomsonreuters.com/en/press-releases/2025/december/thomson-reuters-and-imperial-college-london-announce-new-frontier-ai-lab",
+          "https://losalamosreporter.com/2025/08/28/los-alamos-national-laboratory-launches-frontier-ai-models-on-the-venado-supercomputer/",
+          "https://www.fticonsulting.com/insights/articles/frontiers-ai-research-2025",
+          "https://blogs.nvidia.com/blog/mixture-of-experts-frontier-models/",
+          "https://intelligence.org/2025/06/11/so-you-want-to-work-at-a-frontier-ai-lab/",
+          "https://www.alpha-matica.com/post/the-architecture-of-trust-four-foundational-pillars-of-frontier-ai-safety-december-2025"
+        ],
+        "filtered_citations": [],
+        "was_contaminated": true
+      }
+    ],
+    "reconciliation_reasoning": "The core disagreement is between Agent 1 (80%) and Agents 0/2 (96-97%). After careful analysis, I find Agent 1's estimate is too low for several well-supported reasons:\n\n1. **Temporal constraint is decisive**: With only ~6 months remaining until December 2025, the window for a paradigm shift is extremely narrow. Agent 1 acknowledges this but doesn't weight it sufficiently. Training frontier models takes months of planning and execution. Even if a breakthrough non-transformer architecture were published today, it could not be scaled to frontier performance by December 2025.\n\n2. **The \"transformer derived\" framing is very broad**: The question asks about \"transformer derived architectures,\" not \"pure transformers.\" This is critical because the most successful alternatives (Jamba, Nemotron-H) are hybrids that still incorporate transformer attention layers. As Agents 0 and 2 correctly note, these would still count as \"transformer derived.\" This dramatically narrows the path to a \"No\" resolution \u2014 a pure non-transformer model would need to beat all frontier models, which is an even higher bar.\n\n3. **No credible challenger exists at frontier scale**: The targeted searches confirm that no non-transformer architecture has achieved SOTA on major language modeling benchmarks. Mamba shows efficiency advantages but documented weaknesses in recall and in-context learning. All frontier models from major labs remain transformer-based.\n\n4. **Agent 1's base rate of 78% is too low**: Agent 1 treats the base rate as if there's a ~22% chance of paradigm shift in a ~6-month window, which is historically unprecedented. The transformer-to-RNN transition took years even after the 2017 paper. Agent 0's reasoning about the extremely low per-period probability of paradigm shifts is more rigorous.\n\n5. **Agent 1's concern about resolution ambiguity is somewhat valid but overstated**: While there is some ambiguity in what \"state of the art\" means, the most natural interpretation is performance on standard language modeling benchmarks, where transformers clearly dominate. Even under broader interpretations (efficiency, deployment), hybrid transformer-derived models would likely still qualify.\n\nHowever, I don't go quite as high as Agent 0's 97% because:\n- There is genuine residual uncertainty about secret projects at major labs\n- The definitional boundary of \"transformer derived\" could be tested by architectures that are mostly non-transformer\n- The field moves fast and surprises are possible\n\nI reconcile at 95%, which reflects the overwhelming evidence for transformer persistence while maintaining appropriate humility about the small but real possibility of an unexpected development.",
+    "reconciled_probability": 0.95
+  },
+  "raw_probability": 0.95,
+  "calibrated_probability": null,
+  "brier_raw": 0.0025000000000000044,
+  "brier_calibrated": null
+}

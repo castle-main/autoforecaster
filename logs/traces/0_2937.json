@@ -1,0 +1,545 @@
+{
+  "question": {
+    "post_id": 2937,
+    "question_id": 2937,
+    "id": "metaculus_2937",
+    "source": "metaculus",
+    "url": "https://www.metaculus.com/questions/2937/",
+    "title": "Will the number of deaths from antibiotic-resistant infections per year double by December 31, 2025?",
+    "description": "",
+    "resolution_criteria": "",
+    "created_date": "2019-07-15",
+    "close_date": "2026-01-01",
+    "resolved_date": "2026-01-29",
+    "outcome": 0,
+    "community_prediction_final": 0.01,
+    "num_forecasters": 162,
+    "tags": [
+      "Health & Pandemics"
+    ],
+    "domain": "regulation_policy"
+  },
+  "agent_traces": [
+    {
+      "agent_id": 2,
+      "question_id": 2937,
+      "model_id": "gemini-3.1-pro-preview",
+      "decompose": {
+        "sub_questions": [
+          "What is the currently accepted baseline estimate for annual deaths from antibiotic-resistant infections, and which organization's data (e.g., WHO, CDC, IHME) is most likely to be used to resolve this question?",
+          "Base rate: Historically, what is the year-over-year growth rate of AMR deaths, and has the mortality rate of any similar widespread endemic condition ever doubled within a few years?",
+          "Recent developments: Are there any ongoing surges in highly transmissible, pan-resistant pathogens (e.g., Candida auris, resistant Acinetobacter) or healthcare system shocks that are dramatically increasing the death toll right now?",
+          "Mechanism: Are there any major new reports (such as the next iteration of the IHME Global Research on Antimicrobial Resistance (GRAM) report) scheduled to be published before December 2025 that might introduce a methodology change, retroactively \"doubling\" the death estimate?",
+          "Mechanism: What specific sequence of events would be required for a true epidemiological doubling of AMR deaths globally by 2025 (e.g., critical failure of last-resort antibiotics without replacements)?"
+        ],
+        "initial_search_queries": [
+          "\"antimicrobial resistance\" OR \"antibiotic resistance\" annual deaths baseline estimate WHO OR CDC OR IHME",
+          "\"global burden of bacterial antimicrobial resistance\" \"GRAM\" report next publication date 2024 OR 2025",
+          "recent surge \"antibiotic resistant infections\" OR \"superbug\" outbreaks mortality rate 2023 OR 2024",
+          "\"AMR\" deaths historical growth rate year-over-year"
+        ],
+        "reasoning": "A doubling of annual deaths from a chronic, globally widespread issue like antibiotic resistance over a short time frame is historically extremely rare. It would likely only occur through two main mechanisms: a catastrophic systemic shock (such as a novel, highly transmissible superbug pandemic or widespread healthcare collapse) or a dramatic change in how these deaths are defined and reported (e.g., a new global burden report using looser criteria). Therefore, the sub-questions focus on establishing the baseline and resolution source, analyzing historical base rates of growth, scanning for recent outbreaks or shocks, and investigating upcoming reports that might change the measurement methodology."
+      },
+      "research": {
+        "key_findings": [
+          "The standard baseline for direct deaths from antimicrobial resistance (AMR) is 1.27 million in 2019, which fell to 1.14 million in 2021.",
+          "To double, AMR deaths would need to jump from ~1.14-1.27 million to 2.28-2.54 million by the end of 2025.",
+          "The most authoritative global analysis on AMR (the GRAM report by IHME) was just published in September 2024, confirming the 1.14 million figure for 2021 and projecting 1.91 million direct deaths by 2050.",
+          "Historical data from 1990 to 2021 shows direct AMR deaths increased by less than 10% total over those three decades.",
+          "A global doubling of AMR deaths by 2025 contradicts all current long-term epidemiological forecasts, making such an event essentially impossible absent an unprecedented, unforecasted global catastrophe."
+        ],
+        "evidence_for": [
+          "Resistance in some monitored pathogen-antibiotic combinations increased by 5-15% annually between 2018 and 2023.",
+          "Certain healthcare system shocks, such as the COVID-19 pandemic, led to localized surges in AMR deaths (e.g., a 20% increase in hospital-onset resistant infections in the US)."
+        ],
+        "evidence_against": [
+          "Global AMR deaths actually declined slightly from approximately 1.27 million in 2019 to 1.14 million in 2021.",
+          "Historically, the growth in direct AMR deaths has been extremely slow, rising from 1.06 million in 1990 to 1.14 million in 2021 (less than a 10% increase over 31 years).",
+          "The most recent and authoritative GRAM report (published September 2024) projects that direct AMR deaths will reach 1.91 million by 2050, which is approximately a 70% increase over 30 years. It does not forecast a doubling by 2050, let alone by 2025.",
+          "The highly anticipated 2024 GRAM report has already been published. It updated the numbers but did not introduce a retrospective methodological change that doubled the death count, making another major structural overhaul of the estimates unlikely before December 2025."
+        ],
+        "search_trace": {
+          "rounds": [
+            {
+              "round_number": 1,
+              "query": "\"antimicrobial resistance\" OR \"antibiotic resistance\" annual deaths baseline estimate WHO OR CDC OR IHME",
+              "result": {
+                "query": "\"antimicrobial resistance\" OR \"antibiotic resistance\" annual deaths baseline estimate WHO OR CDC OR IHME",
+                "content": "The most recent baseline estimate for annual deaths directly attributable to antimicrobial resistance is **1.14 million deaths in 2021**, according to research from the Institute for Health Metrics and Evaluation (IHME).[8] However, the more widely cited baseline from multiple sources is **1.27 million deaths in 2019**, which represents deaths directly attributable to bacterial AMR.[3][6]\n\nWhen including AMR-associated deaths (where resistant infections contributed but were not the direct cause), the figures are substantially higher. In 2019, approximately **4.95 million deaths were associated with AMR globally**.[3][6] By 2021, this figure rose to **4.71 million AMR-associated deaths**.[8]\n\n**Key baseline estimates by source and year:**\n\n| Year | Directly Attributable | Associated | Source |\n|------|----------------------|-----------|--------|\n| 2019 | 1.27 million | 4.95 million | CDC/WHO/IHME |\n| 2021 | 1.14 million | 4.71 million | IHME |\n\nThe 2019 estimate comes from research published in The Lancet and is cited consistently by the CDC and WHO as the authoritative baseline.[3][6] [REDACTED: outcome information removed][2]\n\nFor context, projections forecast that annual deaths directly attributable to antibiotic-resistant infections could rise to **1.91 million by 2050** without additional interventions.[2]",
+                "citations": [
+                  "https://www.healthdata.org/news-events/newsroom/news-releases/antimicrobial-resistance-leads-more-deaths-and-illnesses-who",
+                  "https://www.cidrap.umn.edu/antimicrobial-stewardship/study-forecasts-more-39-million-deaths-antimicrobial-resistance-2050",
+                  "https://www.cdc.gov/antimicrobial-resistance/data-research/facts-stats/index.html",
+                  "https://www.healthdata.org/research-analysis/health-topics/antimicrobial-resistance-amr",
+                  "https://www.healthdata.org/news-events/newsroom/news-releases/lancet-more-39-million-deaths-antibiotic-resistant-infections",
+                  "https://www.who.int/news-room/fact-sheets/detail/antimicrobial-resistance",
+                  "https://www.ncbi.nlm.nih.gov/books/NBK577288/",
+                  "https://www.healthdata.org/research-analysis/library/global-burden-bacterial-antimicrobial-resistance-1990-2021-systematic",
+                  "https://www.cdc.gov/antimicrobial-resistance/about/index.html"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 2,
+              "query": "\"global burden of bacterial antimicrobial resistance\" \"GRAM\" report next publication date 2024 OR 2025",
+              "result": {
+                "query": "\"global burden of bacterial antimicrobial resistance\" \"GRAM\" report next publication date 2024 OR 2025",
+                "content": "The **GRAM (Global Research on Antimicrobial Resistance) report was published on September 17, 2024** in The Lancet[1]. The search results do not contain information about the scheduled date for the next GRAM publication beyond 2024.\n\n## Global Burden of Bacterial Antimicrobial Resistance\n\nAccording to the 2024 GRAM study, antimicrobial resistance has reached an **alarming tipping point**[1]. The research indicates that while antibiotics and vaccination helped keep drug-resistance at bay in recent decades, the greatest gains in controlling AMR have already been made, with diminishing returns expected without significant intervention[1].\n\n[REDACTED: outcome information removed][2][3]. Analysis of over 23 million infections across 104 countries shows that resistance to key antibiotics such as fluoroquinolones and third-generation cephalosporins exceeds 40\u201370% for *E. coli* and *Klebsiella pneumoniae* in many regions[3].\n\nBetween 2018 and 2023, antimicrobial resistance **increased in 40% of pathogen-antibiotic combinations monitored**, with annual relative increases ranging from 5\u201315%[4]. **Gram-negative bacteria show rapidly increasing resistance**, particularly to carbapenems and fluoroquinolones\u2014vital last-line treatments[3].\n\nThe GRAM report projects that AMR mortality will increase by 70% by 2050, with deaths among people over 70 likely more than doubling[1]. However, improved global access to effective antibiotics in low- and middle-income countries could potentially avert more than 50 million deaths by 2050[1].",
+                "citations": [
+                  "https://gardp.org/gardp-welcomes-the-latest-publication-of-the-global-research-on-antimicrobial-resistance-gram/",
+                  "https://www.flemingfund.org/publications/who-launches-global-antibiotic-resistance-surveillance-report-2025/",
+                  "https://www.amr-insights.eu/global-antibiotic-resistance-surveillance-report-2025/",
+                  "https://www.biomerieux.com/corp/en/education/resource-hub/solution-education/antimicrobial-resistance/antibiotic-resistance-surveillance-2025.html",
+                  "https://www.who.int/publications/i/item/9789240116337",
+                  "https://www.who.int/publications/b/78945",
+                  "https://www.lshtm.ac.uk/research/centres/amr/news/473666/whos-2025-glass-report-progress-patterns-and-persistent-gaps",
+                  "https://assets.publishing.service.gov.uk/media/6936ac34b612700b2cb73607/ESPAUR-report-2024-to-2025.pdf"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 3,
+              "query": "recent surge \"antibiotic resistant infections\" OR \"superbug\" outbreaks mortality rate 2023 OR 2024",
+              "result": {
+                "query": "recent surge \"antibiotic resistant infections\" OR \"superbug\" outbreaks mortality rate 2023 OR 2024",
+                "content": "**Antimicrobial resistance has surged significantly in recent years, with antibiotic resistance rising in more than 40% of bacteria-drug combinations tracked between 2018 and 2023, with average annual increases of 5 to 15 percent.**[2]\n\n## Recent Trends and Mortality\n\nIn the United States, **six bacterial antimicrobial-resistant hospital-onset infections increased by a combined 20% during the COVID-19 pandemic compared to the pre-pandemic period**, peaking in 2021 and remaining above pre-pandemic levels in 2022.[1] The U.S. toll includes more than 2.8 million antimicrobial-resistant infections occurring each year, with more than 35,000 people dying as a result according to CDC data.[1]\n\nGlobally, antimicrobial resistance was directly responsible for **1.27 million deaths in 2019 and contributed to nearly 5 million deaths**, according to WHO estimates.[2][4] In the EU/EEA specifically, more than 35,000 people die each year as a direct consequence of antimicrobial-resistant infections.[3]\n\n## Regional Patterns\n\nGeographic disparities are pronounced: **one in three infections in WHO's South-East Asia and Eastern Mediterranean regions were resistant to antibiotics, compared with one in five in Africa** as of 2023.[2] In the EU, [REDACTED: outcome information removed][3]\n\n## Specific Bacterial Threats\n\nResistance levels are highest among common pathogens: globally, more than 40% of *E. coli* and 55% of *K. pneumoniae* strains were resistant to key antibiotics, with resistance levels exceeding 70% in parts of Africa.[2] These trends are **forcing clinicians to turn to last-resort antibiotics**, which are costly, complex, and often unavailable in lower-income countries.[2]\n\nWithout intervention, resistant infections could cause an estimated $3 trillion in global GDP losses per year by 2030.[2]",
+                "citations": [
+                  "https://www.cdc.gov/antimicrobial-resistance/data-research/facts-stats/index.html",
+                  "https://news.un.org/en/story/2025/10/1166087",
+                  "https://www.ecdc.europa.eu/en/publications-data/antimicrobial-resistance-eueea-ears-net-annual-epidemiological-report-2024",
+                  "https://www.who.int/news-room/fact-sheets/detail/antimicrobial-resistance",
+                  "https://www.healthdata.org/news-events/newsroom/news-releases/lancet-more-39-million-deaths-antibiotic-resistant-infections",
+                  "https://pmc.ncbi.nlm.nih.gov/articles/PMC12284435/"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 4,
+              "query": "\"AMR\" deaths historical growth rate year-over-year",
+              "result": {
+                "query": "\"AMR\" deaths historical growth rate year-over-year",
+                "content": "Between 1990 and 2021, **annual deaths from antimicrobial resistance increased by approximately 8% on average**[1][2]. This overall growth masked significant underlying shifts, with direct AMR deaths rising from 1.06 million in 1990 to 1.14 million in 2021[1].\n\nHowever, the growth trajectory was not uniform throughout this period. A notable deviation occurred in 2019-2021, when direct AMR deaths increased to 1.2 million in 2019 but then **declined to 1.14 million in 2021**, [REDACTED: outcome information removed][2].\n\nThe search results do not provide specific year-over-year growth rates for individual years. Instead, they emphasize the long-term trend of modest growth (approximately 8% average annual increase) from 1990 to 2021, contrasting with projected growth of almost 70% between 2022 and 2050[1][2].",
+                "citations": [
+                  "https://www.eurekalert.org/news-releases/1057804",
+                  "https://www.ox.ac.uk/news/2024-09-17-antibiotic-resistance-has-claimed-least-one-million-lives-each-year-1990",
+                  "https://wellcome.org/insights/articles/new-forecasts-reveal-39-million-deaths-will-be-directly-attributable-bacterial-antimicrobial",
+                  "https://pmc.ncbi.nlm.nih.gov/articles/PMC10336207/",
+                  "https://beaconbio.org/en/report/?reportid=b6345e3e-de57-4624-b9fa-36d7c13829ea&eventid=87f9a364-86ea-4ec8-978c-63a0c14f6e22",
+                  "https://ourworldindata.org/antibiotics"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            }
+          ],
+          "total_citations": 29
+        },
+        "information_gaps": [
+          "The exact wording of the resolution criteria for the question, specifically which organization's data (IHME, WHO, or CDC) will be strictly used as the final arbiter for 'deaths'.",
+          "Whether any other global health body is preparing a separate report with significantly different methodology before the end of 2025."
+        ]
+      },
+      "base_rate": {
+        "reference_classes": [
+          "Historical 4-year periods since 1990 where global AMR deaths doubled",
+          "Historical instances of an established, major global cause of death doubling in 1-4 years",
+          "Major global disease burden updates introducing methodological changes that double the baseline death count"
+        ],
+        "base_rate_estimate": 0.001,
+        "reasoning": "The historical growth rate of direct AMR deaths has been extraordinarily slow, increasing by less than 10% in total over the 31-year period from 1990 to 2021. Looking at historical 4-year windows during this time, zero out of roughly eight periods experienced a doubling (or anything close to it). Even major systemic shocks like the COVID-19 pandemic only led to localized increases (e.g., 20% in the US). Furthermore, major global disease burden estimates rarely double over short timeframes unless there is a massive methodological reclassification. Since the most authoritative report (GRAM) was just published in September 2024 without such a reclassification\u2014and projects only a 70% increase over the next 30 years\u2014the base rate for a doubling in the next 1-4 years is virtually zero."
+      },
+      "inside_view": {
+        "factors_for": [
+          "Resolution criteria ambiguity: If the baseline was established using direct deaths (~1.27M) but the final resolution unexpectedly relies on AMR-associated deaths (~4.95M), it could artificially create a 'doubling' on paper.",
+          "Localized surges: In severe systemic shocks (like the COVID-19 pandemic), some hospital-onset AMR infections saw an acute ~20% spike in specific countries like the US."
+        ],
+        "factors_against": [
+          "Epidemiological reality: Direct AMR deaths grew by less than 10% over the last 30 years, from 1.06M in 1990 to 1.14M in 2021.",
+          "Recent comprehensive data: The September 2024 IHME GRAM report forecasts 1.91 million deaths by 2050. A doubling by 2025 would require surpassing the 2050 forecast in just over a year.",
+          "No methodological shifts expected: The preeminent global health report (GRAM) was just released in late 2024. It is extremely unlikely that another major overhaul of baseline counting methodologies will occur and artificially double the numbers by the end of 2025.",
+          "Absence of a massive bacterial pandemic: To add over 1 million global bacterial deaths within a single year would require a fast-spreading, highly lethal, multi-drug resistant pathogen on the scale of COVID-19, which is not currently observed."
+        ],
+        "inside_view_estimate": 0.001,
+        "reasoning": "The inside view on this question overwhelmingly points to \"No\". Global direct deaths from AMR have been remarkably stable over the last three decades, hovering between 1.06 million and 1.27 million. The most authoritative recent study on the matter (the IHME GRAM report published in September 2024) expects this number to reach 1.91 million by 2050. Expecting the number to double from ~1.14-1.27 million to over 2.28 million by December 2025 would require growth that drastically exceeds the projected 30-year trend, occurring in just over one year. Barring a methodological error that compares direct deaths to associated deaths, or an unprecedented super-bacterial global pandemic that emerges within months, this is practically impossible. Given the base rate and the solid, newly released 2024 data, the probability is negligible."
+      },
+      "synthesis": {
+        "base_rate_weight": 0.5,
+        "adjustment_reasoning": "Both the base rate and inside view point to the same conclusion: a doubling of AMR deaths by the end of 2025 is effectively impossible under standard epidemiological constraints. The base rate demonstrates that AMR deaths grew by less than 10% over the last 30 years, and the inside view relies on the most recent, comprehensive authoritative report (the Sept 2024 IHME GRAM report) which projects it will take until 2050 just to reach a 70% increase. The only conceivable way for this to occur is an extreme methodological reclassification where associated deaths are swapped for direct deaths, or an unprecedented super-bacterial pandemic occurring right now.",
+        "final_probability": 0.001,
+        "confidence_reasoning": "Assigning a near-zero probability is justified when dealing with slow-moving epidemiological variables. AMR deaths are heavily studied, and the latest definitive data from late 2024 shows massive stability over decades. Doubling within a year and a half would require an extra 1.1 million deaths globally, which would look like a novel, incredibly fast-moving global pandemic of a totally untreatable pathogen. Since no such pathogen is currently spreading, and data methodology is unlikely to drastically change immediately after a major 2024 publication, the chances are infinitesimal."
+      },
+      "raw_probability": 0.001
+    },
+    {
+      "agent_id": 1,
+      "question_id": 2937,
+      "model_id": "gpt-5.4",
+      "decompose": {
+        "sub_questions": [
+          "What is the baseline annual global death toll from antibiotic-resistant infections used by this market/question source, and over what comparison period would 'double by December 31, 2025' be judged?",
+          "Historically, how often have annual deaths from antimicrobial resistance risen by ~100% within 1-3 years globally or in major regions, absent a major shock?",
+          "What recent developments in 2024-2025 could plausibly cause a sharp near-term increase in deaths from antibiotic-resistant infections (e.g., major conflict, health-system collapse, sudden resistant pathogen spread, drug shortages, surveillance revisions)?",
+          "Through what mechanism could the measured annual death count double by end-2025: a true surge in resistant infections, worsening case fatality due to treatment failure, broader geographic spread, or a methodological/data-reporting change?",
+          "Are there credible recent estimates, WHO/CDC/ECDC analyses, or expert warnings indicating that antibiotic-resistant infection deaths are already rising steeply enough in 2025 to approach a doubling threshold?"
+        ],
+        "initial_search_queries": [
+          "antimicrobial resistance deaths annual estimate 2024 2025 WHO Lancet antibiotic-resistant infections",
+          "have antimicrobial resistance deaths doubled in a year historical global trend study",
+          "2025 antibiotic-resistant infections surge outbreak resistant bacteria deaths news WHO CDC",
+          "drug-resistant infection deaths surveillance revision methodology 2024 2025"
+        ],
+        "reasoning": "The main uncertainty is whether a doubling by end-2025 is even mechanically plausible on such a short timeline. The strongest cruxes are: the baseline and exact metric used for resolution; the base rate of similarly rapid changes in AMR mortality; and whether any recent shock, outbreak, or methodological revision could create a sudden jump. Distinguishing between real epidemiological worsening and a data-definition change is especially important because either could drive resolution, but they imply very different probabilities."
+      },
+      "research": {
+        "key_findings": [
+          "The strongest baseline evidence in the provided results is that the most recent confirmed global annual deaths directly attributable to bacterial AMR were about 1.14 million in 2021, from the GRAM/Lancet work; 2024-2025 figures appear to be projections or surveillance snippets rather than confirmed global mortality totals.",
+          "The same source reportedly projects just over 1 million annual direct AMR deaths from 2025 onward and about 1.91 million by 2050, implying no near-term doubling from the 2021 baseline absent a major shock. This is fairly direct evidence against a 2025 doubling if the market uses GRAM-style attributable deaths.",
+          "Historical trend evidence in the provided results suggests AMR deaths do not typically double globally within 1-3 years; examples cited are much slower increases, such as MRSA deaths more than doubling over 1990-2021 and monitored resistance rates rising about 5-15% annually in 2018-2023.",
+          "Recent 2024-2025 developments in the results point to rising resistance prevalence and some regional outbreak growth (e.g., carbapenem-resistant organisms), but not to a documented global mortality surge on the order required for annual deaths to double by end-2025.",
+          "There is some possibility of apparent jumps from measurement changes: WHO's 2025 surveillance report expanded prevalence estimates and coverage, and EARS-Net changed reporting systems. But the results do not show a concrete mortality-methodology revision that would by itself double global AMR death counts.",
+          "A major unresolved issue is the market's exact resolution source and baseline definition: whether it refers to direct AMR-attributable deaths, AMR-associated deaths, all antibiotic-resistant infection deaths, or a specific WHO/CDC estimate. This materially affects what 'double' means.",
+          "One search result about a 2025 surge appears contaminated or at least outcome-leaking/speculative, and should be treated cautiously; its strongest non-redacted content still only supports moderate increases in resistance prevalence, not doubling of deaths."
+        ],
+        "evidence_for": [
+          "WHO/global surveillance snippets in the results indicate resistance prevalence increased in over 40% of pathogen-antibiotic combinations from 2018 to 2023, with average annual increases around 5-15%. Indirectly supports worsening burden, but far from enough alone for a mortality doubling by 2025.",
+          "Regional outbreak data cited for carbapenem-resistant organisms and NDM-CRE suggest some fast-growing resistant threats in particular settings. This is indirect evidence that localized mortality could spike if such strains spread broadly.",
+          "Surveillance expansion in 2025 (WHO broader estimates, EARS-Net system transition) creates a plausible mechanism for measured counts to rise even without a true biological doubling, though no direct evidence of mortality re-basing is provided."
+        ],
+        "evidence_against": [
+          "Direct projection evidence from GRAM/Lancet: annual deaths directly attributable to bacterial AMR are projected at just over 1 million in 2025 and 1.91 million only by 2050. If the baseline is 1.14 million in 2021, this strongly argues against doubling by Dec. 31, 2025.",
+          "Historical evidence in the results says AMR deaths have not doubled in a single year; the notable examples of doubling occurred over decades, not 1-3 years. This is moderately strong evidence against the plausibility of a near-term global doubling absent an extreme shock.",
+          "No provided source shows a confirmed 2024 or 2025 global death estimate remotely near twice the likely baseline. The evidence available points to gradual increases, not an abrupt jump.",
+          "No concrete major-shock mechanism is documented in the results: no cited global health-system collapse, conflict-linked worldwide surge, sudden pandemic-resistant pathogen spread, or drug-shortage event large enough to double global annual AMR deaths by end-2025."
+        ],
+        "search_trace": {
+          "rounds": [
+            {
+              "round_number": 1,
+              "query": "antimicrobial resistance deaths annual estimate 2024 2025 WHO Lancet antibiotic-resistant infections",
+              "result": {
+                "query": "antimicrobial resistance deaths annual estimate 2024 2025 WHO Lancet antibiotic-resistant infections",
+                "content": "Based on the most recent data available, **the last confirmed annual deaths from antimicrobial resistance (AMR) were 1.14 million in 2021**[2], with projections rather than confirmed estimates for 2024-2025.\n\nThe Global Research on Antimicrobial Resistance (GRAM) Project, published in *The Lancet*, forecasts that **more than 1 million people will die annually from 2025 onward from antibiotic-resistant infections, rising to an estimated 1.91 million deaths in 2050**[1][2]. This represents a 67.5% increase from 2021 levels. When including deaths where resistant infections play a contributing but not direct role (AMR-associated deaths), the 2021 total reached 4.71 million, projected to rise to 8.22 million by 2050[2].\n\nBetween 2025 and 2050, the study forecasts a cumulative **39 million deaths directly attributable to bacterial AMR and 169 million total AMR-associated deaths**[1][2]. This equates to approximately three deaths every minute[2].\n\n**Regional disparities are significant**: Sub-Saharan Africa and South Asia account for the highest rates of AMR deaths, with South and Southeastern Asia and sub-Saharan Africa expected to see disproportionately high mortality. Asia could account for approximately 4.73 million yearly deaths by 2050, followed by Africa at 4.15 million[3].\n\nThe study identifies **methicillin-resistant *Staphylococcus aureus* (MRSA) as the leading cause**, with [REDACTED: outcome information removed][1][2]. Carbapenem-resistant gram-negative bacteria also showed significant increases.\n\nHowever, interventions could substantially reduce these projections: improved healthcare delivery for severe infections could save up to 92 million lives by 2050, while new antimicrobials targeting gram-negative pathogens could avert 11 million deaths[2].",
+                "citations": [
+                  "https://www.cidrap.umn.edu/antimicrobial-stewardship/study-forecasts-more-39-million-deaths-antimicrobial-resistance-2050",
+                  "https://wellcome.org/insights/articles/new-forecasts-reveal-39-million-deaths-will-be-directly-attributable-bacterial-antimicrobial",
+                  "https://www.statista.com/chart/35473/projected-deaths-antimicrobial-resistance-amr/",
+                  "https://www.who.int/news/item/13-10-2025-who-warns-of-widespread-resistance-to-common-antibiotics-worldwide",
+                  "https://www.who.int/publications/i/item/9789240116337",
+                  "https://www.who.int/news-room/fact-sheets/detail/antimicrobial-resistance",
+                  "https://www.healthdata.org/news-events/newsroom/news-releases/lancet-more-39-million-deaths-antibiotic-resistant-infections"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 2,
+              "query": "have antimicrobial resistance deaths doubled in a year historical global trend study",
+              "result": {
+                "query": "have antimicrobial resistance deaths doubled in a year historical global trend study",
+                "content": "Antimicrobial resistance deaths have **not doubled in a single year** according to the available historical data. However, specific resistant bacteria have shown dramatic increases over longer periods.\n\n**MRSA deaths more than doubled between 1990 and 2021**, representing the largest increase among different types of antibiotic-resistant infections over this 31-year span.[1] Additionally, deaths in adults aged 70 and older from AMR increased by more than 80% between 1990 and 2021.[1]\n\nIn terms of year-over-year trends, the data shows more modest annual increases. Between 2018 and 2023, antibiotic resistance rose in over 40% of pathogen-antibiotic combinations monitored, with average annual increases ranging from 5 to 15%.[3][5]\n\nThe trajectory of total AMR-related deaths shows significant growth over longer timeframes:\n\n- [REDACTED: outcome information removed]\n- [REDACTED: outcome information removed]\n- Projections forecast a 67.5% increase in annual deaths directly attributed to bacterial AMR by 2050, rising to an estimated 1.91 million deaths annually[1]\n\nThe historical data from the Global Research on Antimicrobial Resistance (GRAM) Project, published in *The Lancet*, provides the most comprehensive analysis of bacterial AMR trends since 1990 and includes forecasts to 2050.[1]",
+                "citations": [
+                  "https://wellcome.org/insights/articles/new-forecasts-reveal-39-million-deaths-will-be-directly-attributable-bacterial-antimicrobial",
+                  "https://www.emjreviews.com/microbiology-infectious-diseases/news/escmid-global-2025-three-million-child-deaths-tied-to-amr-in-2022/",
+                  "https://news.un.org/en/story/2025/10/1166087",
+                  "https://www.healthdata.org/news-events/newsroom/news-releases/lancet-more-39-million-deaths-antibiotic-resistant-infections",
+                  "https://www.who.int/news/item/13-10-2025-who-warns-of-widespread-resistance-to-common-antibiotics-worldwide",
+                  "https://www.who.int/publications/i/item/9789240116337",
+                  "https://beaconbio.org/en/report/?reportid=b6345e3e-de57-4624-b9fa-36d7c13829ea&eventid=87f9a364-86ea-4ec8-978c-63a0c14f6e22"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 3,
+              "query": "2025 antibiotic-resistant infections surge outbreak resistant bacteria deaths news WHO CDC",
+              "result": {
+                "query": "2025 antibiotic-resistant infections surge outbreak resistant bacteria deaths news WHO CDC",
+                "content": "**Antibiotic-resistant bacterial infections surged dramatically in 2025**, with major outbreaks documented globally by both the CDC and WHO, driven largely by highly dangerous strains resistant to last-resort antibiotics.\n\n[REDACTED: outcome information removed]\n\nOverall carbapenem-resistant infections across 29 U.S. states climbed nearly 70% during the same period, with researchers identifying 4,341 cases in 2023, including 1,831 NDM cases[1]. The CDC noted that approximately 12,700 infections and 1,100 deaths occurred in the U.S. in 2020 due to carbapenem-resistant bacteria[3][5].\n\nThese infections\u2014including **pneumonia, bloodstream infections, urinary tract infections, and wound infections**\u2014are extremely difficult to treat and can be deadly[2][3]. NDM-CRE bacteria are resistant to most available antibiotics, and detection remains challenging because many clinical laboratories lack adequate testing capacity[3].\n\nGlobally, the WHO reported that **one in six laboratory-confirmed bacterial infections in 2023 were resistant to antibiotic treatments**[4]. Between 2018 and 2023, antibiotic resistance rose in over 40% of pathogen-antibiotic combinations monitored, with average annual increases of 5\u201315%[4][6]. The report noted particularly alarming resistance rates among common Gram-negative bacteria: more than 40% of E. coli and over 55% of K. pneumoniae globally were resistant to third-generation cephalosporins, with resistance exceeding 70% in Africa[4][6].\n\n**Contributing factors** to the surge include heightened antibiotic use during the COVID-19 pandemic, gaps in infection control practices, and limited testing availability in hospitals and clinics[1][3]. The WHO warned that rising resistance is \"forcing clinicians to turn to last-resort antibiotics,\" which are costly, complex, and often unavailable in lower-income countries[6]. Without intervention, resistant infections could cause an estimated **$3 trillion in annual global GDP losses by 2030**[6].",
+                "citations": [
+                  "https://www.powershealth.org/about-us/newsroom/health-library/2025/09/24/drugresistant-nightmare-bacteria-infections-soar-70-in-us",
+                  "https://www.unmc.edu/healthsecurity/transmission/2025/09/24/cdc-warns-of-surge-in-dangerous-highly-antibiotic-resistant-bacteria/",
+                  "https://www.cdc.gov/media/releases/2025/2025-cdc-report-finds-sharp-rise-in-dangerous-drug-resistant-bacteria.html",
+                  "https://www.who.int/news/item/13-10-2025-who-warns-of-widespread-resistance-to-common-antibiotics-worldwide",
+                  "https://www.latimes.com/california/story/2025-09-25/dramatic-rise-in-dangerous-drug-resistant-bacteria-cdc-warns-how-you-can-protect-yourself",
+                  "https://news.un.org/en/story/2025/10/1166087"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 4,
+              "query": "drug-resistant infection deaths surveillance revision methodology 2024 2025",
+              "result": {
+                "query": "drug-resistant infection deaths surveillance revision methodology 2024 2025",
+                "content": "The search results do not contain specific information about drug-resistant infection deaths surveillance revision methodology for 2024-2025. However, they do reveal significant methodological developments in broader antimicrobial resistance surveillance during this period.\n\n## Key Methodological Developments\n\nThe WHO Global Antibiotic Resistance Surveillance Report 2025 introduces notable innovations in surveillance methodology. For the **first time**, WHO published resistance prevalence estimates across **22 key antibiotics** and measured coverage of surveillance systems across participating countries[5]. This report analyzed data from over 23 million infections across 104 countries[3], representing an expansion in both the scope and standardization of global AMR surveillance.\n\nIn Europe, the European Antimicrobial Resistance Surveillance Network (EARS-Net) underwent a significant transition in 2025, moving fully to the **EpiPulse Cases system** with updated **metadata structures** and technical variables for antimicrobial resistance reporting[4]. This transition aimed to align reporting standards with new epidemiological data classifications.\n\n## Broader Surveillance Framework Changes\n\nNational surveillance systems have also adopted more comprehensive approaches. Bangladesh's National AMR Surveillance Strategy, for example, established a **National Coordination Centre** to analyze resistance patterns and share data with WHO GLASS, while establishing a **national data dashboard** for real-time surveillance monitoring[1]. These systems began incorporating genomic-based surveillance capabilities alongside traditional susceptibility testing.\n\nThe available search results focus on pathogen antimicrobial susceptibility surveillance rather than specifically addressing mortality tracking methodology changes for drug-resistant infections during this period.",
+                "citations": [
+                  "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-dghs/2024/12/3708d21864264b3ba0b47ea8d9b4b4ed.pdf",
+                  "https://www.who.int/publications/i/item/9789240116337",
+                  "https://www.biomerieux.com/corp/en/education/resource-hub/solution-education/antimicrobial-resistance/antibiotic-resistance-surveillance-2025.html",
+                  "https://www.ecdc.europa.eu/sites/default/files/documents/EARS-Net-reporting-protocol.pdf",
+                  "https://www.flemingfund.org/publications/who-launches-global-antibiotic-resistance-surveillance-report-2025/",
+                  "https://www.who.int/news/item/13-10-2025-who-warns-of-widespread-resistance-to-common-antibiotics-worldwide",
+                  "https://assets.publishing.service.gov.uk/media/6936ac34b612700b2cb73607/ESPAUR-report-2024-to-2025.pdf",
+                  "https://www.cdc.gov/antimicrobial-resistance/programs/AR-actions-events.html"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": false
+              },
+              "reasoning": "Initial query from decomposition"
+            }
+          ],
+          "total_citations": 28
+        },
+        "information_gaps": [
+          "The biggest gap is the market/source resolution criteria: what exact baseline annual death figure is being compared, from which year(s), and whether 'double by December 31, 2025' is judged against direct AMR-attributable deaths, AMR-associated deaths, or another metric.",
+          "We lack a direct, recent statement from the market/question source defining the comparison period and data source for resolution.",
+          "We do not have corroborated 2024-2025 global mortality estimates from WHO, CDC, ECDC, IHME/GRAM, or other authoritative bodies showing whether annual AMR deaths are already accelerating sharply.",
+          "We lack evidence on whether any major 2024-2025 shock (war-related health-system collapse, severe antibiotic shortages, major resistant pathogen expansion) had global enough impact to alter annual mortality by ~100%.",
+          "We do not know whether any 2025 methodological revision to global AMR mortality estimation, rather than resistance prevalence surveillance, could mechanically increase the counted deaths enough to reach a doubling threshold.",
+          "A high-value next search would target the resolution source and baseline definition directly, e.g.: '\"Will the number of deaths from antibiotic-resistant infections per year double by December 31, 2025\" resolution criteria baseline source' or search the specific market platform plus the question text."
+        ]
+      },
+      "base_rate": {
+        "reference_classes": [
+          "Global annual deaths directly attributable to bacterial AMR in GRAM/Lancet estimates and projections (2021 baseline around 1.14M; 2025 projected just over 1M; 2050 around 1.91M)",
+          "Historical growth rates in major AMR mortality/resistance indicators over multi-year periods (e.g., MRSA deaths doubling over decades, resistance prevalence rising roughly 5-15% annually)",
+          "Short-horizon global infectious-disease mortality doublings absent a major exogenous shock; rare for chronic/drift-driven burdens like AMR",
+          "Measurement/reclassification jumps in international surveillance systems, which can cause apparent increases but rarely clean 2x jumps in headline global mortality without explicit methodology change"
+        ],
+        "base_rate_estimate": 0.03,
+        "reasoning": "The strongest narrow reference class is the GRAM/Lancet series itself: if the market resolves against global annual deaths directly attributable to bacterial AMR, the latest confirmed level is about 1.14 million in 2021 and the cited projection for 2025 is only a bit above 1 million, with 1.91 million not reached until 2050. That reference class alone implies a very low base rate for doubling by end-2025. A second reference class is historical AMR burden growth: available examples show doubling over decades or annual resistance-prevalence increases around 5-15%, which is far below the roughly 100% jump needed within a few years. A third reference class is broader short-horizon global mortality doublings, which usually require an acute shock such as a pandemic, war spillover, or health-system collapse; no such shock is built into the base rate. Finally, surveillance changes can create apparent jumps, but absent an explicit mortality re-baselining they are unlikely to produce a full 2x increase in a globally recognized death total by the deadline. These reference classes all point to a very low probability, though not zero because the question is ambiguous about the exact metric and source, and definitional changes could create some chance of an apparent doubling. Balancing these, a reasonable base-rate estimate is about 3%."
+      },
+      "inside_view": {
+        "factors_for": [
+          "Resistance prevalence is rising in many pathogen-antibiotic combinations (roughly 5-15% annually in cited surveillance), which directionally increases AMR mortality risk; strength: weak-to-moderate because it is indirect and too small for a near-term 2x mortality jump by itself.",
+          "Some regional outbreaks of highly resistant organisms (e.g., carbapenem-resistant strains, NDM-CRE) show that certain threats can grow quickly; strength: weak because evidence is localized and not clearly scalable to a global annual death doubling by end-2025.",
+          "Expanded surveillance/measurement in 2025 could create an apparent increase in counted deaths if resolution relies on revised estimates rather than biological reality; strength: weak-to-moderate because methodology changes can move headline numbers, but no concrete evidence shows a mortality definitional shift large enough to produce a 2x jump."
+        ],
+        "factors_against": [
+          "The most direct evidence is the GRAM/Lancet baseline and projection path: about 1.14M direct AMR deaths in 2021, around just over 1M projected in 2025, and only ~1.91M by 2050; strength: very strong, high reliability, and highly unique to the question.",
+          "Historical AMR mortality/resistance trends generally evolve over years to decades, not via clean global doublings within 1-3 years absent a major exogenous shock; strength: strong, because it speaks directly to plausibility over the forecast horizon.",
+          "No confirmed 2024-2025 global mortality estimate in the provided evidence is remotely close to twice the likely baseline; strength: strong, though somewhat limited by reporting lag.",
+          "No specific global shock mechanism is identified that could plausibly double annual AMR deaths by end-2025 (e.g., worldwide resistant pandemic, severe global antibiotic supply collapse, or broad health-system breakdown); strength: moderate-to-strong.",
+          "Potential measurement-change arguments are speculative: surveillance expansion is documented, but there is no explicit mortality re-baselining likely to mechanically produce a doubling; strength: moderate."
+        ],
+        "inside_view_estimate": 0.015,
+        "reasoning": "The specific evidence pushes below the already low base rate. The dominant update is the directness of the GRAM/Lancet estimates: if the relevant metric is direct AMR-attributable deaths, the best available global modeling does not merely fail to show a doubling by 2025, it points to a roughly flat near-term level and a much slower climb toward 2050. That is unusually strong negative evidence because it directly addresses the same quantity and timeframe. The pro-Yes evidence mostly concerns worsening resistance prevalence and localized outbreaks, which are real but indirect and already partly embedded in long-run AMR base rates; they do not uniquely support a sudden global mortality doubling within months. The only serious route to Yes would be a resolution-definition quirk or a major methodology change, but the evidence provided does not identify a concrete change in mortality accounting large enough to generate a 2x headline increase. Because the main uncertainty is definitional rather than epidemiological, I do not go all the way to zero; however, on the substantive evidence, a doubling by Dec. 31, 2025 looks even less likely than the 3% base rate."
+      },
+      "synthesis": {
+        "base_rate_weight": 0.72,
+        "adjustment_reasoning": "I start from the 3% base rate because the reference class is unusually tight: the question is essentially about a specific global AMR mortality quantity over a short horizon, and the best direct source (GRAM/Lancet) already tracks that quantity and projects no near-term doubling. The inside view points even lower, to 1.5%, mainly because the strongest evidence is not generic trend evidence but direct model-based estimates for the same metric and timeframe. I still keep substantial weight on the base rate because the base rate itself already incorporates much of this direct evidence, and the residual upside risk comes mostly from definition/measurement quirks rather than epidemiology. So I adjust downward from 3% toward 1.5%, but only partway, landing near 2%.",
+        "final_probability": 0.02,
+        "confidence_reasoning": "2% reflects that a doubling by end-2025 would require either an extreme, largely unobserved real-world shock or a major definitional/accounting change, neither of which has concrete supporting evidence. I do not go lower than about 1% because market resolution ambiguity and revised estimation methods can occasionally generate surprising jumps in headline global burden figures. I do not go higher than about 3% because the direct GRAM/Lancet path is strongly inconsistent with a near-term doubling, historical AMR changes are far too slow, and no specific catalyst has been identified. I would be comfortable betting against this at 98:2 odds, but not at 99.5:0.5 because of residual resolution/measurement uncertainty."
+      },
+      "raw_probability": 0.02
+    },
+    {
+      "agent_id": 0,
+      "question_id": 2937,
+      "model_id": "claude-opus-4-6",
+      "decompose": {
+        "sub_questions": [
+          "What is the current baseline estimate of annual deaths from antibiotic-resistant infections globally, and from what year/study does this baseline come?",
+          "What is the recent trend in antibiotic resistance deaths \u2014 are they increasing, decreasing, or stable, and at what rate?",
+          "What would need to happen mechanistically for AMR deaths to double within the timeframe (e.g., emergence of new pan-resistant strains, collapse of antibiotic pipelines, pandemic-driven resistance)?",
+          "How has COVID-19 affected antibiotic resistance rates and AMR death tracking (e.g., increased antibiotic use in hospitals, disrupted surveillance)?",
+          "What is the base rate for infectious disease death tolls doubling within a short timeframe (e.g., 5-10 years) absent a major pandemic or systemic shock?",
+          "How is 'doubling' defined for resolution \u2014 does it require a specific official report or estimate, and what measurement methodology would be used?"
+        ],
+        "initial_search_queries": [
+          "global antibiotic resistance deaths 2024 2025 estimate",
+          "AMR antimicrobial resistance death trends latest data IHME Lancet",
+          "COVID-19 impact antibiotic resistance deaths increase",
+          "antimicrobial resistance deaths doubling projection forecast"
+        ],
+        "reasoning": "The key uncertainty revolves around: (1) the baseline \u2014 the most cited figure is ~1.27 million deaths directly attributable to AMR in 2019 (from the 2022 Lancet/IHME study), so doubling would mean ~2.5 million; (2) the rate of increase \u2014 AMR deaths have been growing but gradual doubling over just a few years would be unprecedented without a major shock; (3) measurement and reporting \u2014 even if deaths are rising, updated global estimates may not be published by end of 2025, making resolution dependent on what data is available; (4) COVID-19's impact on resistance patterns is a wildcard that could accelerate trends. The base rate question is critical because infectious disease burdens rarely double in short periods without extraordinary circumstances, making this likely to resolve No unless there's a specific baseline interpretation that makes doubling easier to achieve."
+      },
+      "research": {
+        "key_findings": [
+          "The most authoritative baseline is from the GRAM Project/IHME Lancet study: 1.14 million deaths directly attributable to bacterial AMR in 2021, with 4.71 million associated deaths.",
+          "The GRAM Project projects AMR deaths will increase by 67.5% from 1.14 million (2021) to 1.91 million by 2050 \u2014 this is a gradual increase over nearly 30 years, far short of doubling by 2025.",
+          "For deaths to double by end of 2025 (i.e., reach ~2.28 million directly attributable deaths or ~9.4 million associated deaths), an unprecedented and sudden surge would be needed within just 4 years of the 2021 baseline.",
+          "COVID-19 accelerated AMR through increased hospital antibiotic use, with specific resistant pathogens increasing 50-108% in prevalence, but overall AMR death tolls did not double during the pandemic period.",
+          "Historical trends show AMR deaths have been relatively stable at over 1 million annually since 1990, with gradual shifts in age demographics rather than sudden doublings.",
+          "MRSA deaths roughly doubled over a 31-year period (1990-2021: 57,200 to 130,000), illustrating that even for individual pathogens, doubling takes decades not years.",
+          "No credible forecast or projection suggests AMR deaths will double within the 2021-2025 timeframe. The most aggressive projections still show gradual increases over decades."
+        ],
+        "evidence_for": [
+          "COVID-19 caused dramatic increases in specific resistant pathogens (CRaB up 106%, VRE up 108%), showing rapid surges are possible for individual organisms.",
+          "Hospital-onset AMR infections and deaths increased at least 15% from 2019 to 2020, showing pandemic conditions can accelerate AMR deaths.",
+          "Antibiotic overuse during COVID-19, especially in ICU settings (54% of ICU patients developed healthcare-associated infections), could have compounding effects.",
+          "Sub-Saharan Africa and South Asia have high AMR burdens with limited surveillance, meaning true death counts could be higher than estimated."
+        ],
+        "evidence_against": [
+          "The GRAM Project projects only a 67.5% increase in directly attributable AMR deaths over 29 years (2021-2050), meaning the annual rate of increase is roughly 2% per year \u2014 far too slow to double by 2025.",
+          "AMR deaths have been relatively stable at ~1 million+ annually since 1990, showing no historical precedent for sudden doubling.",
+          "Even the COVID-19 pandemic \u2014 the largest healthcare disruption in a century \u2014 increased hospital AMR deaths by ~15%, not anywhere close to doubling.",
+          "No new pan-resistant pathogen or systemic shock is currently emerging that would plausibly cause a sudden doubling.",
+          "The question requires doubling by December 31, 2025 \u2014 only ~4 years from the 2021 baseline, an extremely short timeframe for such a massive epidemiological shift.",
+          "Even under the most pessimistic scenarios modeled by researchers, AMR deaths don't double until well past 2050 for the overall population.",
+          "Measurement and reporting lag means even if deaths increased dramatically, official estimates confirming a doubling by end of 2025 are unlikely to be published in time."
+        ],
+        "search_trace": {
+          "rounds": [
+            {
+              "round_number": 1,
+              "query": "global antibiotic resistance deaths 2024 2025 estimate",
+              "result": {
+                "query": "global antibiotic resistance deaths 2024 2025 estimate",
+                "content": "Global antibiotic resistance deaths are estimated at **over 1 million annually beginning in 2025**, according to recent forecasts, though specific 2024 estimates are not provided in available data.\n\nThe most comprehensive recent analysis comes from the Global Research on Antimicrobial Resistance (GRAM) Project, which forecasts that **more than 1 million people will die annually from 2025 to 2050** from antibiotic-resistant infections.[1][2] The study projects annual deaths directly attributable to bacterial antimicrobial resistance (AMR) will rise from 1.14 million in 2021 to an estimated 1.91 million by 2050\u2014representing a 67.5% increase.[2] Additionally, deaths associated with AMR (where resistance plays a role but is not the direct cause) are expected to increase from 4.71 million in 2021 to 8.22 million by 2050.[2]\n\nThe most recent confirmed data available is from 2021, which recorded **1.14 million deaths directly attributable to bacterial AMR**, with an additional 4.71 million AMR-associated deaths.[2] Historically, drug-resistant infections have been responsible for more than 1 million deaths annually since 1990, totaling over 36 million deaths during that period.[1]\n\nThe burden is highly unequal globally: **sub-Saharan Africa and South Asia account for the highest rates of AMR deaths**, with particularly high numbers from multidrug-resistant tuberculosis.[2] [REDACTED: outcome information removed][3]",
+                "citations": [
+                  "https://www.cidrap.umn.edu/antimicrobial-stewardship/study-forecasts-more-39-million-deaths-antimicrobial-resistance-2050",
+                  "https://wellcome.org/insights/articles/new-forecasts-reveal-39-million-deaths-will-be-directly-attributable-bacterial-antimicrobial",
+                  "https://www.who.int/news/item/13-10-2025-who-warns-of-widespread-resistance-to-common-antibiotics-worldwide",
+                  "https://www.who.int/publications/i/item/9789240116337",
+                  "https://www.healthdata.org/news-events/newsroom/news-releases/lancet-more-39-million-deaths-antibiotic-resistant-infections",
+                  "https://www.cdc.gov/antimicrobial-resistance/data-research/facts-stats/index.html"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 2,
+              "query": "AMR antimicrobial resistance death trends latest data IHME Lancet",
+              "result": {
+                "query": "AMR antimicrobial resistance death trends latest data IHME Lancet",
+                "content": "The latest **Global Research on Antimicrobial Resistance (GRAM) project** study published in *The Lancet* projects that **39 million deaths will be directly attributable to bacterial antimicrobial resistance (AMR) between 2025 and 2050**, with an additional 169 million deaths associated with AMR.[1][2]\n\n## Historical Trends (1990\u20132021)\n\nMore than **one million people died annually from AMR** between 1990 and 2021.[1] During this period, death patterns shifted significantly by age group: **AMR deaths among children under five declined by 50%, while deaths among people aged 70 and older increased by more than 80%**.[1][5] In 2021 specifically, AMR led directly to 1.14 million deaths and was associated with a broader 4.71 million deaths globally.[1]\n\n## Projected Trends (2022\u20132050)\n\n[REDACTED: outcome information removed] Associated deaths (where AMR bacteria play an indirect role) are projected to increase by 74.5%, from 4.71 million to 8.22 million annually.[1][2] This translates to approximately **three deaths every minute** from AMR between 2025 and 2050.[2]\n\nOlder populations will continue to bear the greatest burden, as rapidly aging populations are more vulnerable to infection.[2]\n\n## Regional Disparities\n\n**South Asia will face the highest AMR burden**, with 11.8 million deaths directly attributable to AMR projected between 2025 and 2050.[1][3] Sub-Saharan Africa and other parts of southern and eastern Asia also face disproportionately high death rates, particularly from multi-drug resistant tuberculosis.[2]\n\n## Key Resistant Pathogens\n\n**Methicillin-resistant *Staphylococcus aureus* (MRSA)** showed the largest increase globally, with deaths more than doubling from 57,200 in 1990 to 130,000 in 2021.[1][3] Among Gram-negative bacteria, carbapenem resistance increased substantially from 127,000 deaths in 1990 to 216,000 in 2021.[1][3]\n\n## Potential Interventions\n\nAccording to the study, **improved access to healthcare and antibiotics could save 92 million lives between 2025 and 2050**, while the development of new antimicrobials targeting Gram-negative pathogens could avert up to 11 million additional AMR-related deaths.[1][2]",
+                "citations": [
+                  "https://www.eurekalert.org/news-releases/1057804",
+                  "https://wellcome.org/insights/articles/new-forecasts-reveal-39-million-deaths-will-be-directly-attributable-bacterial-antimicrobial",
+                  "https://www.italian-gbd-initiative.it/2024/10/antibiotic-resistance-more-than-39-million-deaths-expected-by-2050-according-to-a-gbd-project-analysis-published-in-the-lancet/?lang=en",
+                  "https://www.gavi.org/vaccineswork/drug-resistant-superbugs-set-kill-39-million-people-2050-lancet-study-warns",
+                  "https://pubmed.ncbi.nlm.nih.gov/39299261/",
+                  "https://www.ndtvprofit.com/world/the-lancet-journal-reported-that-118-million-deaths-were-forecast-by-global-research-on-antimicrobial-resistance-project-between-2025-2050-10002796"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 3,
+              "query": "COVID-19 impact antibiotic resistance deaths increase",
+              "result": {
+                "query": "COVID-19 impact antibiotic resistance deaths increase",
+                "content": "The COVID-19 pandemic significantly accelerated antimicrobial resistance (AMR) globally, resulting in increased deaths from resistant infections during and following the outbreak.\n\n## Deaths from Antimicrobial-Resistant Infections\n\n[REDACTED: outcome information removed] This occurred alongside substantial increases in hospital-onset AMR infections: resistant hospital-onset infections and deaths both increased at least 15% from 2019 to 2020 among seven major pathogens[2].\n\nFor broader context, bacterial AMR caused **0.9 to 1.7 million deaths in 2019**[1], ranking it among the leading causes of death worldwide. [REDACTED: outcome information removed]\n\n## Pandemic's Impact on Resistance Rates\n\nThe COVID-19 pandemic drove dramatic increases in specific multidrug-resistant pathogens:\n\n- **Carbapenem-resistant *Acinetobacter baumannii* (CRaB)** increased by 106.06% compared to pre-pandemic periods[4]\n- **Extended-spectrum beta-lactamase (ESBL)** increased by 13.85%[4]\n- **Carbapenem-resistant enterobacteria (CRE-CPE)** increased by 50%[4]\n- **Vancomycin-resistant enterococci (VRE)** increased by 108.33%[4]\n\n[REDACTED: outcome information removed]\n\n## Contributing Factors\n\nThe primary driver was **increased antibiotic use in hospitalized COVID-19 patients**, even when bacterial coinfections were not confirmed[3]. Healthcare-associated infections surged dramatically: 54% of intensive care unit patients developed at least one healthcare-associated infection during their stay[1]. Additionally, projections estimate that without intervention, AMR could cause up to **10 million deaths annually by 2050**, with 90% occurring in low- and middle-income countries[1].",
+                "citations": [
+                  "https://pmc.ncbi.nlm.nih.gov/articles/PMC12729640/",
+                  "https://www.cdc.gov/antimicrobial-resistance/data-research/threats/COVID-19.html",
+                  "https://pmc.ncbi.nlm.nih.gov/articles/PMC12666195/",
+                  "https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2025.1584574/full",
+                  "https://www.who.int/westernpacific/newsroom/commentaries/detail/the-next-pandemic-is-already-here--antimicrobial-resistance-is-upending-a-century-of-achievements-in-global-health",
+                  "https://www.acpjournals.org/doi/10.7326/ANNALS-24-03078",
+                  "https://www.cdc.gov/antimicrobial-resistance/media/pdfs/covid19-impact-report-508.pdf"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            },
+            {
+              "round_number": 4,
+              "query": "antimicrobial resistance deaths doubling projection forecast",
+              "result": {
+                "query": "antimicrobial resistance deaths doubling projection forecast",
+                "content": "Based on the search results, **antimicrobial resistance (AMR) deaths are not projected to double by 2050; instead, forecasts indicate increases of approximately 67-75%.**\n\nSpecifically, the GRAM Project\u2014a partnership between the University of Oxford and the Institute for Health Metrics and Evaluation\u2014projects that **deaths directly attributed to bacterial AMR will increase by 67.5%, rising from 1.14 million in 2021 to 1.91 million by 2050**[1]. Deaths *associated* with AMR (which includes indirect deaths linked to AMR) are expected to increase by 74.5%, from 4.71 million in 2021 to 8.22 million deaths in 2050[1].\n\nHowever, one demographic shows a more dramatic projection: [REDACTED: outcome information removed][2]. This reflects a significant shift in AMR's impact, as deaths in this age group already increased by more than 80% between 1990 and 2021[1]. This doubling among older adults is driven by rapidly aging populations in regions like South Asia, which are projected to face the highest AMR death burden by 2050[2].\n\nOverall, the research indicates that while AMR deaths will grow substantially\u2014accounting for an estimated **39 million deaths directly attributable to bacterial AMR between 2025 and 2050**[1]\u2014the growth rate for the global population falls short of a complete doubling, though vulnerable older populations face much steeper increases.",
+                "citations": [
+                  "https://www.ndm.ox.ac.uk/news/antibiotic-resistance-could-cause-39-million-deaths-between-now-and-2050",
+                  "https://www.gavi.org/vaccineswork/drug-resistant-superbugs-set-kill-39-million-people-2050-lancet-study-warns",
+                  "https://www.who.int/westernpacific/newsroom/commentaries/detail/the-next-pandemic-is-already-here--antimicrobial-resistance-is-upending-a-century-of-achievements-in-global-health",
+                  "https://www.acpjournals.org/doi/10.7326/acph-20240925-deaths-from-antimicrobial-resistance-could-rise-by-nearly-70percent-by-2050-study-finds",
+                  "https://www.worldhealthexpo.com/insights/medical-laboratory/rising-amr-threat-demands-action"
+                ],
+                "filtered_citations": [],
+                "was_contaminated": true
+              },
+              "reasoning": "Initial query from decomposition"
+            }
+          ],
+          "total_citations": 24
+        },
+        "information_gaps": [
+          "The exact definition of 'doubling' in the question is unclear \u2014 doubling from what specific baseline year and using which metric (directly attributable vs. associated deaths)?",
+          "We lack confirmed AMR death data for 2022-2024; the most recent comprehensive data is from 2021. The actual trajectory in recent years is uncertain.",
+          "It's unclear whether the question requires an official published estimate confirming the doubling, or whether it could resolve based on modeling/projections.",
+          "Regional surveillance gaps (especially in sub-Saharan Africa and South Asia) mean true AMR death counts could be substantially higher than reported, though this would affect both baseline and current estimates.",
+          "We don't know if any novel pan-resistant pathogen has emerged in 2024-2025 that could cause a sudden spike in deaths (though no evidence suggests this)."
+        ]
+      },
+      "base_rate": {
+        "reference_classes": [
+          "Historical rate of change in global AMR deaths (stable at ~1M+ annually since 1990, with gradual increases of ~2% per year)",
+          "Pandemic-driven surges in infectious disease mortality (COVID-19 increased hospital AMR deaths ~15%, not close to doubling)",
+          "GRAM Project long-term projections (67.5% increase over 29 years, 2021-2050)",
+          "Historical doubling times for specific pathogen death tolls (e.g., MRSA took 31 years to double)"
+        ],
+        "base_rate_estimate": 0.01,
+        "reasoning": "Multiple reference classes converge strongly on an extremely low probability:\n\n1. **Historical stability of AMR deaths**: AMR deaths have been relatively stable at ~1 million+ annually since 1990. There is no historical precedent for a sudden doubling in a 4-year window. The base rate of such a doubling occurring in any given 4-year period based on the last 30+ years of data is essentially 0%.\n\n2. **Pandemic-driven surges**: Even COVID-19 \u2014 the most significant healthcare disruption in a century \u2014 only increased hospital AMR deaths by ~15%. This is the most extreme stress test we have for sudden AMR increases, and it fell far short of doubling. The base rate of a doubling even during unprecedented healthcare crises appears to be near 0%.\n\n3. **Expert projections**: The GRAM Project projects only 67.5% growth over 29 years. No credible forecasting body projects a doubling by 2025 or anything remotely close. The implied annual growth rate (~2%) would need to be roughly 18% per year compounded to achieve doubling in 4 years.\n\n4. **Pathogen-specific doubling times**: Even for individual high-growth pathogens, doubling takes decades (MRSA: 31 years). A system-wide doubling in 4 years would require something completely unprecedented.\n\nThe only pathways to \"Yes\" involve either (a) a catastrophic novel pan-resistant pathogen emerging and spreading globally \u2014 for which there are no current signals \u2014 or (b) dramatic improvements in surveillance revealing deaths were always much higher (which wouldn't represent an actual increase). Even accounting for measurement uncertainty and under-reporting, a doubling by end of 2025 is extraordinarily unlikely. I estimate ~1% to account for extreme tail risks and unknown unknowns."
+      },
+      "inside_view": {
+        "factors_for": [
+          "COVID-19 caused dramatic increases in specific resistant pathogens (CRaB up 106%, VRE up 108%), showing rapid surges are theoretically possible for individual organisms - but this is WEAK because individual pathogen surges didn't translate to overall AMR death doubling",
+          "Surveillance gaps in sub-Saharan Africa and South Asia mean true death counts could be higher than estimated - WEAK because this affects both baseline and current estimates equally",
+          "Antibiotic overuse during COVID-19 could have compounding effects over subsequent years - MODERATE strength but insufficient magnitude to drive doubling",
+          "Hospital-onset AMR infections increased ~15% during COVID peak - WEAK because 15% is far from 100% doubling"
+        ],
+        "factors_against": [
+          "GRAM Project projects only 67.5% increase over 29 years (2021-2050), roughly 2% annual growth - VERY STRONG, authoritative projection completely inconsistent with doubling by 2025",
+          "AMR deaths stable at ~1M+ annually since 1990 with no historical precedent for sudden doubling - VERY STRONG structural evidence",
+          "Even COVID-19 - largest healthcare disruption in a century - only increased hospital AMR deaths ~15%, nowhere near doubling - VERY STRONG natural experiment",
+          "Only ~4 years from 2021 baseline to end of 2025, requiring ~25% annual growth when historical trend is ~2% - VERY STRONG mathematical constraint",
+          "No novel pan-resistant pathogen or systemic shock currently emerging that could plausibly cause sudden doubling - STRONG absence of mechanism",
+          "MRSA took 31 years to double, illustrating even individual pathogens don't double quickly - STRONG historical analogy",
+          "Even most pessimistic modeled scenarios don't show overall AMR deaths doubling until well past 2050 - STRONG evidence from expert modeling",
+          "Measurement and reporting lag means even if deaths increased, official confirmation by end of 2025 is unlikely - MODERATE procedural barrier"
+        ],
+        "inside_view_estimate": 0.005,
+        "reasoning": "The evidence is overwhelmingly one-sided against doubling. Every single line of evidence - historical trends, authoritative projections, the COVID natural experiment, mathematical growth rate requirements, absence of novel threats, and measurement/reporting constraints - points firmly against AMR deaths doubling by end of 2025. \n\nFor this to happen, we would need AMR deaths to go from ~1.14 million (2021 directly attributable) to ~2.28 million in just 4 years. The historical growth rate is ~2% per year. Even the most disruptive event in modern medical history (COVID-19) only increased AMR deaths by ~15%. To double would require a sustained ~19% annual growth rate, or some sudden catastrophic event far exceeding anything observed.\n\nThe factors favoring Yes are all extremely weak - individual pathogen surges didn't translate to overall doubling, surveillance gaps affect both baseline and current estimates, and COVID compounding effects are insufficient in magnitude.\n\nThe only conceivable pathway would be an entirely novel, unprecedented global catastrophe involving pan-resistant pathogens spreading rapidly - something with no current evidence of occurring. Even then, reporting lags would likely prevent official confirmation by end of 2025.\n\nI estimate this at 0.5%, slightly below the 1% base rate, because the specific evidence (stable multi-decade trends, authoritative projections showing gradual increase, COVID natural experiment showing limited impact) all consistently point to near-impossibility of this outcome. The base rate of 1% may already be generous given how extreme this scenario would need to be."
+      },
+      "synthesis": {
+        "base_rate_weight": 0.4,
+        "adjustment_reasoning": "Both the base rate (1%) and inside view (0.5%) are very close and point in the same direction \u2014 this is extraordinarily unlikely. The base rate of 1% was already constructed with generous tail-risk allowance. The inside view provides specific, strong, and converging evidence that further reduces the probability slightly. The reference class is highly relevant (AMR death trends over decades), and the inside-view evidence is strong and specific (GRAM projections, COVID natural experiment, mathematical growth constraints, absence of novel threats). Since both views are well-grounded and consistent, I weight them roughly equally but lean slightly toward the inside view's lower estimate because the specific evidence is so uniformly one-directional. The only reason not to go lower than ~0.5% is genuine uncertainty about unknown unknowns \u2014 a novel catastrophic pan-resistant outbreak, or a dramatic redefinition/reclassification of AMR deaths that could technically satisfy the resolution criteria.",
+        "final_probability": 0.007,
+        "confidence_reasoning": "I'm very confident this should be extremely low. Every line of evidence \u2014 historical trends, expert projections, the COVID-19 natural experiment, mathematical growth requirements, absence of novel threats \u2014 converges on near-impossibility. A doubling would require ~19% annual growth when the historical rate is ~2%. Even the worst healthcare crisis in a century (COVID) only moved the needle ~15% total, not per year. No credible forecasting body projects anything close to this. The 0.7% accounts for: (1) extreme tail risk of a completely unprecedented pan-resistant pathogen event, (2) possible dramatic changes in measurement methodology that could technically satisfy resolution criteria, and (3) general epistemic humility about unknown unknowns. I wouldn't go higher because there are literally zero signals pointing toward this outcome. I wouldn't go lower because sub-0.5% would require even more certainty about the absence of black swan events than I can justify."
+      },
+      "raw_probability": 0.007
+    }
+  ],
+  "supervisor": {
+    "agent_probabilities": [
+      0.001,
+      0.02,
+      0.007
+    ],
+    "disagreements": [
+      "Agent 1 assigns 2% while Agent 2 assigns 0.1% - a 20x difference. Agent 1 gives more weight to definitional/measurement ambiguity as a pathway to 'Yes', while Agent 2 considers this pathway nearly impossible given the September 2024 GRAM report.",
+      "Agent 0 (0.7%) and Agent 2 (0.1%) disagree on how much residual probability to assign to unknown unknowns and black swan events. Agent 0 is more generous with tail risk allowance.",
+      "All agents agree the epidemiological evidence overwhelmingly points against doubling, but differ on how much probability to assign to resolution-criteria ambiguity (e.g., if 'doubling' is measured against a different baseline or metric than expected)."
+    ],
+    "targeted_searches": [],
+    "reconciliation_reasoning": "All three agents are in strong agreement that a doubling of antibiotic-resistant infection deaths by end of 2025 is extraordinarily unlikely. The core evidence is consistent across all agents:\n\n1. The GRAM/IHME baseline is ~1.14M direct AMR deaths in 2021, with projections of only ~1.91M by 2050\n2. Historical growth has been ~2% per year, while doubling would require ~19% annual growth\n3. Even COVID-19 only increased AMR deaths by ~15%\n4. No novel pan-resistant pathogen is currently spreading\n\nThe main disagreement is about how much residual probability to assign. Agent 1's 2% seems slightly too high - their reasoning acknowledges the evidence is overwhelmingly against but gives more weight to definitional ambiguity. However, Agent 2's 0.1% may be slightly too low, as it leaves almost no room for genuine unknown unknowns or resolution-criteria surprises.\n\nAgent 2 makes the strongest case that the September 2024 GRAM report essentially closes the door on methodological reclassification as a pathway, which is a good point that Agent 1 doesn't fully account for. Agent 0's 0.7% represents a reasonable middle ground that accounts for tail risks without overweighting them.\n\nThe key question is: how much probability should we assign to truly unprecedented events (novel pan-resistant pathogen, dramatic measurement change, resolution-criteria surprise)? Given that:\n- The most authoritative data source was just updated in Sept 2024\n- No signals of a catastrophic resistant pathogen exist\n- Even the most extreme recent healthcare shock (COVID) fell far short\n- The question asks about a very specific, measurable outcome\n\nI believe the probability should be very low but not infinitesimal. Agent 0's reasoning at 0.7% is well-calibrated - it accounts for genuine tail risk without being overly generous. Agent 1's 2% overweights the definitional ambiguity pathway. Agent 2's 0.1% is defensible but perhaps too confident about the absence of all possible black swan scenarios.\n\nI reconcile at approximately 0.5%, which reflects the overwhelming evidence against while maintaining appropriate epistemic humility about extreme tail risks.",
+    "reconciled_probability": 0.005
+  },
+  "raw_probability": 0.005,
+  "calibrated_probability": null,
+  "brier_raw": 2.5e-05,
+  "brier_calibrated": null
+}
