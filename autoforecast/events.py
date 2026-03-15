@@ -20,6 +20,7 @@ class EventType(str, Enum):
     SUPERVISOR_DONE = "supervisor_done"
     CALIBRATION_DONE = "calibration_done"
     BATCH_PROGRESS = "batch_progress"
+    PHASE_CHANGE = "phase_change"  # data: {"phase": "initial"|"eval"|"random_batches", "batches_completed": int}
     API_COST = "api_cost"  # data: {"provider": "anthropic"|"perplexity", "cost_usd": float, "input_tokens": int, "output_tokens": int}
 
 
@@ -66,4 +67,18 @@ def compute_cost(model: str, input_tokens: int, output_tokens: int) -> float:
     """Compute USD cost from token counts."""
     prices = PRICING.get(model, {"input": 15.0, "output": 75.0})
     return (input_tokens * prices["input"] + output_tokens * prices["output"]) / 1_000_000
+
+
+async def track_api_cost(
+    handler, provider: str, model: str, input_tokens: int, output_tokens: int,
+) -> None:
+    """Emit an API_COST event if handler is present."""
+    if not handler:
+        return
+    cost = compute_cost(model, input_tokens, output_tokens)
+    await handler.handle(PipelineEvent(
+        event_type=EventType.API_COST,
+        data={"provider": provider, "model": model, "cost_usd": cost,
+              "input_tokens": input_tokens, "output_tokens": output_tokens},
+    ))
 

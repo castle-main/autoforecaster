@@ -10,7 +10,7 @@ from dataclasses import dataclass
 
 import anthropic
 
-from .events import EventType, NullHandler, PipelineEvent, Stage, compute_cost
+from .events import EventType, NullHandler, PipelineEvent, Stage, track_api_cost
 from .search import execute_search
 from .types import (
     AgentTrace,
@@ -22,8 +22,9 @@ from .types import (
     SearchRound,
     SearchTrace,
     SynthesisOutput,
-    PROJECT_ROOT,
+    clean_schema,
 )
+from .utils import extract_json, load_memory, load_prompt
 
 MODEL = "claude-opus-4-6"
 FAST_MODEL = "claude-haiku-4-5-20251001"
@@ -45,18 +46,6 @@ AGENT_MODELS: dict[int, ModelConfig] = {
 }
 
 
-def _load_prompt(name: str) -> str:
-    path = PROJECT_ROOT / "prompts" / f"{name}.md"
-    return path.read_text()
-
-
-def _load_memory() -> str:
-    path = PROJECT_ROOT / "memory.md"
-    if path.exists():
-        return path.read_text()
-    return ""
-
-
 async def _run_stage(
     client: anthropic.AsyncAnthropic,
     system_prompt: str,
@@ -68,7 +57,7 @@ async def _run_stage(
     """Run a single pipeline stage using tool_use for structured output."""
     schema = output_model.model_json_schema()
     # Remove $defs and other JSON Schema features that aren't needed for tool input
-    tool_schema = _clean_schema(schema)
+    tool_schema = clean_schema(schema)
 
     tool = {
         "name": "provide_output",
@@ -86,15 +75,8 @@ async def _run_stage(
         tool_choice={"type": "tool", "name": "provide_output"},
     )
 
-    # Track cost
-    if handler and response.usage:
-        cost = compute_cost(MODEL, response.usage.input_tokens, response.usage.output_tokens)
-        await handler.handle(PipelineEvent(
-            event_type=EventType.API_COST,
-            data={"provider": "anthropic", "model": MODEL, "cost_usd": cost,
-                  "input_tokens": response.usage.input_tokens,
-                  "output_tokens": response.usage.output_tokens},
-        ))
+    if response.usage:
+        await track_api_cost(handler, "anthropic", MODEL, response.usage.input_tokens, response.usage.output_tokens)
 
     # Extract tool use input
     for block in response.content:
@@ -102,26 +84,6 @@ async def _run_stage(
             return output_model.model_validate(block.input)
 
     raise RuntimeError(f"No tool_use block in response for {output_model.__name__}")
-
-
-def _clean_schema(schema: dict) -> dict:
-    """Clean pydantic JSON schema for Anthropic tool_use input_schema.
-
-    Resolves $ref pointers and removes unsupported keys.
-    """
-    defs = schema.pop("$defs", {})
-
-    def resolve(obj):
-        if isinstance(obj, dict):
-            if "$ref" in obj:
-                ref_name = obj["$ref"].split("/")[-1]
-                return resolve(defs.get(ref_name, {}))
-            return {k: resolve(v) for k, v in obj.items()}
-        if isinstance(obj, list):
-            return [resolve(item) for item in obj]
-        return obj
-
-    return resolve(schema)
 
 
 def _openai_strict_fixup(schema: dict) -> None:
@@ -158,7 +120,7 @@ async def _run_stage_openai(
     import openai
 
     schema = output_model.model_json_schema()
-    tool_schema = _clean_schema(schema)
+    tool_schema = clean_schema(schema)
     # OpenAI strict mode requires additionalProperties: false and all properties
     # listed as required on every object, recursively
     _openai_strict_fixup(tool_schema)
@@ -190,19 +152,8 @@ async def _run_stage_openai(
         tool_choice={"type": "function", "function": {"name": "provide_output"}},
     )
 
-    # Track cost
-    if handler and response.usage:
-        cost = compute_cost(
-            model_config.model_id,
-            response.usage.prompt_tokens,
-            response.usage.completion_tokens,
-        )
-        await handler.handle(PipelineEvent(
-            event_type=EventType.API_COST,
-            data={"provider": "openai", "model": model_config.model_id, "cost_usd": cost,
-                  "input_tokens": response.usage.prompt_tokens,
-                  "output_tokens": response.usage.completion_tokens},
-        ))
+    if response.usage:
+        await track_api_cost(handler, "openai", model_config.model_id, response.usage.prompt_tokens, response.usage.completion_tokens)
 
     # Extract function call arguments
     msg = response.choices[0].message
@@ -226,7 +177,7 @@ async def _run_stage_gemini(
     from google.genai import types as genai_types
 
     schema = output_model.model_json_schema()
-    tool_schema = _clean_schema(schema)
+    tool_schema = clean_schema(schema)
 
     # Build the function declaration for Gemini
     func_decl = genai_types.FunctionDeclaration(
@@ -264,16 +215,10 @@ async def _run_stage_gemini(
         ),
     )
 
-    # Track cost
-    if handler and response.usage_metadata:
+    if response.usage_metadata:
         input_tokens = response.usage_metadata.prompt_token_count or 0
         output_tokens = response.usage_metadata.candidates_token_count or 0
-        cost = compute_cost(model_config.model_id, input_tokens, output_tokens)
-        await handler.handle(PipelineEvent(
-            event_type=EventType.API_COST,
-            data={"provider": "google", "model": model_config.model_id, "cost_usd": cost,
-                  "input_tokens": input_tokens, "output_tokens": output_tokens},
-        ))
+        await track_api_cost(handler, "google", model_config.model_id, input_tokens, output_tokens)
 
     # Extract function call from response
     for part in response.candidates[0].content.parts:
@@ -368,24 +313,13 @@ async def _run_agentic_search(
             )
 
             if follow_up_response.usage:
-                cost = compute_cost(FAST_MODEL, follow_up_response.usage.input_tokens, follow_up_response.usage.output_tokens)
-                await _handler.handle(PipelineEvent(
-                    event_type=EventType.API_COST,
-                    data={"provider": "anthropic", "model": FAST_MODEL, "cost_usd": cost,
-                          "input_tokens": follow_up_response.usage.input_tokens,
-                          "output_tokens": follow_up_response.usage.output_tokens},
-                ))
+                await track_api_cost(_handler, "anthropic", FAST_MODEL, follow_up_response.usage.input_tokens, follow_up_response.usage.output_tokens)
 
             text = follow_up_response.content[0].text
             try:
-                decision = json.loads(text)
+                decision = extract_json(text)
             except json.JSONDecodeError:
-                import re
-                match = re.search(r'\{.*\}', text, re.DOTALL)
-                if match:
-                    decision = json.loads(match.group())
-                else:
-                    break
+                break
 
             if not decision.get("search", False):
                 break
@@ -419,7 +353,7 @@ async def run_agent(
     """Run full 5-stage forecasting pipeline for one agent."""
     _handler = handler or NullHandler()
     model_config = AGENT_MODELS.get(agent_id, AGENT_MODELS[0])
-    memory = memory if memory is not None else _load_memory()
+    memory = memory if memory is not None else load_memory()
     memory_section = f"\n\n## Accumulated Forecasting Lessons\n{memory}" if memory else ""
 
     _evt = lambda et, stage=None, **data: _handler.handle(PipelineEvent(
@@ -429,7 +363,7 @@ async def run_agent(
 
     # Stage 1: Decompose
     await _evt(EventType.AGENT_STAGE_START, Stage.DECOMPOSE)
-    decompose_prompt = _load_prompt("decompose")
+    decompose_prompt = load_prompt("decompose")
     decompose_msg = f"Question: {question.title}\n\nClose date: {question.close_date}\nDomain: {question.domain.value}\nTags: {', '.join(question.tags)}{memory_section}"
 
     decompose = await _run_stage_dispatch(
@@ -447,7 +381,7 @@ async def run_agent(
     )
 
     # Synthesize research findings via LLM (still part of research stage)
-    research_prompt = _load_prompt("research")
+    research_prompt = load_prompt("research")
     search_summary = "\n\n".join([
         f"**Search {r.round_number}: {r.query}**\n{r.result.content}"
         for r in search_trace.rounds
@@ -476,7 +410,7 @@ async def run_agent(
 
     # Stage 3: Base Rate
     await _evt(EventType.AGENT_STAGE_START, Stage.BASE_RATE)
-    base_rate_prompt = _load_prompt("base_rate")
+    base_rate_prompt = load_prompt("base_rate")
     base_rate_msg = (
         f"Question: {question.title}\n\n"
         f"Key findings:\n" + "\n".join(f"- {f}" for f in research.key_findings) +
@@ -494,7 +428,7 @@ async def run_agent(
 
     # Stage 4: Inside View
     await _evt(EventType.AGENT_STAGE_START, Stage.INSIDE_VIEW)
-    inside_view_prompt = _load_prompt("inside_view")
+    inside_view_prompt = load_prompt("inside_view")
     inside_view_msg = (
         f"Question: {question.title}\n\n"
         f"Base rate estimate: {base_rate.base_rate_estimate:.2%}\n"
@@ -515,7 +449,7 @@ async def run_agent(
 
     # Stage 5: Synthesize
     await _evt(EventType.AGENT_STAGE_START, Stage.SYNTHESIZE)
-    synthesize_prompt = _load_prompt("synthesize")
+    synthesize_prompt = load_prompt("synthesize")
     synthesize_msg = (
         f"Question: {question.title}\n\n"
         f"Base rate: {base_rate.base_rate_estimate:.2%}\n"
