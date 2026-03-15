@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import sys
 import time
 from datetime import datetime, timezone
@@ -22,6 +23,8 @@ from .types import (
     sample_batch,
     PROJECT_ROOT,
 )
+
+DEFAULT_CONCURRENCY = int(os.environ.get("FORECAST_CONCURRENCY", "5"))
 
 
 def _load_memory() -> str:
@@ -120,7 +123,7 @@ async def backtest_batch(
     memory: str | None = None,
     deadline: float | None = None,
     handler=None,
-    concurrency: int = 3,
+    concurrency: int = DEFAULT_CONCURRENCY,
 ) -> list[ForecastResult]:
     """Run backtest on a batch of questions with bounded concurrency."""
     _handler = handler or NullHandler()
@@ -160,7 +163,7 @@ async def backtest_batch(
     return [r for r in raw_results if r is not None]
 
 
-async def run_backtest(start_batch: int = 0, num_batches: int = 1) -> None:
+async def run_backtest(start_batch: int = 0, num_batches: int = 1, batch_size: int = 12, concurrency: int = DEFAULT_CONCURRENCY) -> None:
     """Main entry point: run backtest on specified batches."""
     from .ui import RichHandler
 
@@ -169,8 +172,8 @@ async def run_backtest(start_batch: int = 0, num_batches: int = 1) -> None:
 
     with RichHandler() as handler:
         for batch_num in range(start_batch, start_batch + num_batches):
-            batch = sample_batch(questions, batch_num)
-            results = await backtest_batch(batch, batch_num, memory, handler=handler)
+            batch = sample_batch(questions, batch_num, batch_size=batch_size)
+            results = await backtest_batch(batch, batch_num, memory, handler=handler, concurrency=concurrency)
 
             # Summary
             raw_briers = [r.brier_raw for r in results if r.brier_raw is not None]
@@ -238,7 +241,7 @@ async def run_eval(batch_id: int, results: list[ForecastResult] | None = None) -
     return batch_result
 
 
-async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0) -> None:
+async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0, batch_size: int = 12, concurrency: int = DEFAULT_CONCURRENCY) -> None:
     """Run backtest → eval loop continuously for the specified duration."""
     from .ui import RichHandler
 
@@ -247,7 +250,6 @@ async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0) -> 
     start_time = datetime.now(timezone.utc).isoformat()
 
     questions = load_questions()
-    batch_size = 12
     max_batch = len(questions) // batch_size - 1
     memory = _load_memory()
 
@@ -259,10 +261,10 @@ async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0) -> 
             if time.monotonic() >= deadline:
                 break
 
-            batch = sample_batch(questions, batch_id)
+            batch = sample_batch(questions, batch_id, batch_size=batch_size)
 
             try:
-                results = await backtest_batch(batch, batch_id, memory, deadline=deadline, handler=handler)
+                results = await backtest_batch(batch, batch_id, memory, deadline=deadline, handler=handler, concurrency=concurrency)
             except KeyboardInterrupt:
                 break
 
@@ -323,7 +325,17 @@ async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0) -> 
 
 
 def main():
-    """CLI entry point: python -m autoforecast <start_batch> <num_batches> [--eval <batch_id>] [--run [hours]] [--plot]"""
+    """CLI entry point: python -m autoforecast <start_batch> <num_batches> [--eval <batch_id>] [--run [hours]] [--batch-size N] [--concurrency N] [--plot]"""
+    batch_size = 12
+    if "--batch-size" in sys.argv:
+        idx = sys.argv.index("--batch-size")
+        batch_size = int(sys.argv[idx + 1])
+
+    concurrency = DEFAULT_CONCURRENCY
+    if "--concurrency" in sys.argv:
+        idx = sys.argv.index("--concurrency")
+        concurrency = int(sys.argv[idx + 1])
+
     if "--plot" in sys.argv:
         from .plot import plot_brier_scores, plot_domain_breakdown
         p1 = plot_brier_scores()
@@ -337,7 +349,7 @@ def main():
         if "--start" in sys.argv:
             start_idx = sys.argv.index("--start")
             start_batch = int(sys.argv[start_idx + 1])
-        asyncio.run(run_continuous(duration_seconds=int(hours * 3600), start_batch=start_batch))
+        asyncio.run(run_continuous(duration_seconds=int(hours * 3600), start_batch=start_batch, batch_size=batch_size, concurrency=concurrency))
     elif "--eval" in sys.argv:
         idx = sys.argv.index("--eval")
         batch_id = int(sys.argv[idx + 1])
@@ -345,7 +357,7 @@ def main():
     else:
         start_batch = int(sys.argv[1]) if len(sys.argv) > 1 else 0
         num_batches = int(sys.argv[2]) if len(sys.argv) > 2 else 1
-        asyncio.run(run_backtest(start_batch, num_batches))
+        asyncio.run(run_backtest(start_batch, num_batches, batch_size=batch_size, concurrency=concurrency))
 
 
 if __name__ == "__main__":
