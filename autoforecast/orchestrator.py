@@ -178,7 +178,7 @@ async def run_backtest(start_batch: int = 0, num_batches: int = 1, batch_size: i
     print(f"\nBatch avg Brier (raw): {avg_brier:.4f}")
 
 
-async def run_eval(batch_id: int, results: list[ForecastResult] | None = None) -> BatchResult | None:
+async def run_eval(batch_id: int, results: list[ForecastResult] | None = None, ab_size: int | None = None) -> BatchResult | None:
     """Run eval + postmortem + autoresearcher on a completed batch."""
     from .eval import evaluate_batch
     from .postmortem import run_postmortems, update_memory
@@ -230,7 +230,7 @@ async def run_eval(batch_id: int, results: list[ForecastResult] | None = None) -
 
     # Autoresearcher
     print("\nRunning autoresearcher...")
-    changelog_entry = await run_autoresearcher(postmortems, batch_id, results)
+    changelog_entry = await run_autoresearcher(postmortems, batch_id, results, ab_size=ab_size)
     if changelog_entry:
         status = "ACCEPTED" if changelog_entry.accepted else "REJECTED"
         print(f"Autoresearcher: {status} — {changelog_entry.change_description}")
@@ -240,7 +240,7 @@ async def run_eval(batch_id: int, results: list[ForecastResult] | None = None) -
     return batch_result
 
 
-async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0, batch_size: int = 12, concurrency: int = DEFAULT_CONCURRENCY) -> None:
+async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0, batch_size: int = 12, concurrency: int = DEFAULT_CONCURRENCY, ab_size: int | None = None) -> None:
     """Run backtest → eval loop continuously for the specified duration.
 
     Phase 1 (initial): Run one deterministic batch → eval (triggers A/B testing).
@@ -282,7 +282,7 @@ async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0, bat
             ))
 
             try:
-                batch_result = await run_eval(start_batch, results=results)
+                batch_result = await run_eval(start_batch, results=results, ab_size=ab_size)
             except KeyboardInterrupt:
                 batch_result = None
 
@@ -314,7 +314,7 @@ async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0, bat
             forecasted_qids.update(r.question.question_id for r in results)
 
             try:
-                batch_result = await run_eval(batch_counter, results=results)
+                batch_result = await run_eval(batch_counter, results=results, ab_size=ab_size)
             except KeyboardInterrupt:
                 completed_batches.append(batch_counter)
                 break
@@ -382,6 +382,11 @@ def main():
         idx = sys.argv.index("--concurrency")
         concurrency = int(sys.argv[idx + 1])
 
+    ab_size: int | None = None
+    if "--ab-size" in sys.argv:
+        idx = sys.argv.index("--ab-size")
+        ab_size = int(sys.argv[idx + 1])
+
     if "--plot" in sys.argv:
         from .plot import plot_brier_scores, plot_domain_breakdown
         p1 = plot_brier_scores()
@@ -395,11 +400,11 @@ def main():
         if "--start" in sys.argv:
             start_idx = sys.argv.index("--start")
             start_batch = int(sys.argv[start_idx + 1])
-        asyncio.run(run_continuous(duration_seconds=int(hours * 3600), start_batch=start_batch, batch_size=batch_size, concurrency=concurrency))
+        asyncio.run(run_continuous(duration_seconds=int(hours * 3600), start_batch=start_batch, batch_size=batch_size, concurrency=concurrency, ab_size=ab_size))
     elif "--eval" in sys.argv:
         idx = sys.argv.index("--eval")
         batch_id = int(sys.argv[idx + 1])
-        asyncio.run(run_eval(batch_id))
+        asyncio.run(run_eval(batch_id, ab_size=ab_size))
     else:
         start_batch = int(sys.argv[1]) if len(sys.argv) > 1 else 0
         num_batches = int(sys.argv[2]) if len(sys.argv) > 2 else 1

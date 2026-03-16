@@ -170,6 +170,7 @@ async def run_autoresearcher(
     postmortems: list[PostmortemOutput],
     batch_id: int,
     results: list[ForecastResult],
+    ab_size: int | None = None,
 ) -> Optional[ChangelogEntry]:
     """Main autoresearcher entry point: analyze errors, propose change, A/B test, accept/reject."""
     program = load_program()
@@ -187,9 +188,22 @@ async def run_autoresearcher(
 
     print(f"  Proposed change to {target_file}: {change_description}")
 
+    # Subset results for A/B test if ab_size is set
+    ab_results = results
+    if ab_size is not None and ab_size < len(results):
+        # Bias sampling toward the domain where the error pattern was found
+        bias_domain = proposal.get("bias_domain")
+        weights = np.array([
+            2.0 if (bias_domain and r.question.domain and r.question.domain.value == bias_domain) else 1.0
+            for r in results
+        ])
+        weights /= weights.sum()
+        indices = np.random.choice(len(results), size=ab_size, replace=False, p=weights)
+        ab_results = [results[i] for i in indices]
+
     # Step 2: A/B test using saved results for old prompt
-    print(f"  Running A/B test ({len(results)} questions, using saved results for old prompt)...")
-    brier_old, brier_new = await _ab_test(target_file, new_content, results)
+    print(f"  Running A/B test ({len(ab_results)} questions, using saved results for old prompt)...")
+    brier_old, brier_new = await _ab_test(target_file, new_content, ab_results)
     print(f"  A/B result: old={brier_old:.4f}, new={brier_new:.4f}")
 
     # Step 3: Accept or reject
