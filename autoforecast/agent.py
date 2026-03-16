@@ -15,6 +15,7 @@ from .search import execute_search
 from .types import (
     AgentTrace,
     BaseRateOutput,
+    ClusterResearchOutput,
     DecomposeOutput,
     InsideViewOutput,
     Question,
@@ -24,7 +25,21 @@ from .types import (
     SynthesisOutput,
     clean_schema,
 )
+from pydantic import BaseModel, Field
 from .utils import extract_json, load_memory, load_prompt
+
+
+class _ResearchLite(BaseModel):
+    """Slimmed-down ResearchOutput without search_trace.
+
+    search_trace is always overridden with the real trace after the LLM call,
+    so asking the LLM to produce a deeply nested SearchTrace schema is wasteful
+    and causes Gemini MALFORMED_FUNCTION_CALL errors.
+    """
+    key_findings: list[str] = Field(description="Most important findings from research")
+    evidence_for: list[str] = Field(description="Evidence supporting Yes resolution")
+    evidence_against: list[str] = Field(description="Evidence supporting No resolution")
+    information_gaps: list[str] = Field(description="What we still don't know")
 
 MODEL = "claude-opus-4-6"
 FAST_MODEL = "claude-haiku-4-5-20251001"
@@ -38,11 +53,11 @@ class ModelConfig:
     api_key_env: str
 
 
-# Agent 0: Claude Opus, Agent 1: GPT 5.4 Pro, Agent 2: Gemini 3.1 Pro Preview
+# Agent 0: Claude Opus, Agent 1: GPT 5.4 Pro, Agent 2: Gemini 2.5 Pro
 AGENT_MODELS: dict[int, ModelConfig] = {
     0: ModelConfig(provider="anthropic", model_id="claude-opus-4-6", api_key_env="ANTHROPIC_API_KEY"),
     1: ModelConfig(provider="openai", model_id="gpt-5.4", api_key_env="OPENAI_API_KEY"),
-    2: ModelConfig(provider="google", model_id="gemini-3.1-pro-preview", api_key_env="GEMINI_API_KEY"),
+    2: ModelConfig(provider="google", model_id="gemini-2.5-pro", api_key_env="GEMINI_API_KEY"),
 }
 
 
@@ -221,7 +236,15 @@ async def _run_stage_gemini(
         await track_api_cost(handler, "google", model_config.model_id, input_tokens, output_tokens)
 
     # Extract function call from response
-    for part in response.candidates[0].content.parts:
+    candidate = response.candidates[0]
+    if candidate.content is None or not candidate.content.parts:
+        reason = getattr(candidate, 'finish_reason', 'unknown')
+        raise RuntimeError(
+            f"Gemini returned empty content for {output_model.__name__} "
+            f"(finish_reason={reason}) — likely safety filter or failed generation"
+        )
+
+    for part in candidate.content.parts:
         if part.function_call:
             args = dict(part.function_call.args) if part.function_call.args else {}
             return output_model.model_validate(args)
@@ -265,9 +288,12 @@ async def _run_agentic_search(
     api_key: str | None = None,
     handler=None,
     agent_id: int | None = None,
+    live_mode: bool = False,
+    max_rounds: int | None = None,
 ) -> SearchTrace:
     """Execute iterative search: run initial queries in parallel, then follow up on gaps."""
     _handler = handler or NullHandler()
+    effective_max_rounds = max_rounds if max_rounds is not None else MAX_SEARCH_ROUNDS
 
     # Fire all initial queries in parallel
     for q in initial_queries:
@@ -276,7 +302,7 @@ async def _run_agentic_search(
             agent_id=agent_id, stage=Stage.RESEARCH, data={"query": q},
         ))
     initial_results = await asyncio.gather(*[
-        execute_search(query, close_date, api_key, handler=_handler, question_title=question.title)
+        execute_search(query, close_date, api_key, handler=_handler, question_title=question.title, live_mode=live_mode)
         for query in initial_queries
     ])
     for q in initial_queries:
@@ -296,9 +322,9 @@ async def _run_agentic_search(
     ]
 
     # Additional rounds driven by Haiku deciding what to search next
-    if len(rounds) < MAX_SEARCH_ROUNDS:
+    if len(rounds) < effective_max_rounds:
         client = anthropic.AsyncAnthropic(timeout=120.0)
-        for round_num in range(len(rounds) + 1, MAX_SEARCH_ROUNDS + 1):
+        for round_num in range(len(rounds) + 1, effective_max_rounds + 1):
             search_summary = "\n\n".join([
                 f"**Search {r.round_number}: {r.query}**\n{r.result.content[:1000]}"
                 for r in rounds
@@ -328,7 +354,7 @@ async def _run_agentic_search(
                 event_type=EventType.SEARCH_START, question_id=question.question_id,
                 agent_id=agent_id, stage=Stage.RESEARCH, data={"query": decision["query"]},
             ))
-            result = await execute_search(decision["query"], close_date, api_key, handler=_handler, question_title=question.title, model="sonar-pro")
+            result = await execute_search(decision["query"], close_date, api_key, handler=_handler, question_title=question.title, model="sonar-pro", live_mode=live_mode)
             await _handler.handle(PipelineEvent(
                 event_type=EventType.SEARCH_DONE, question_id=question.question_id,
                 agent_id=agent_id, stage=Stage.RESEARCH, data={"query": decision["query"]},
@@ -349,6 +375,8 @@ async def run_agent(
     agent_id: int,
     memory: str | None = None,
     handler=None,
+    live_mode: bool = False,
+    shared_research: ClusterResearchOutput | None = None,
 ) -> AgentTrace:
     """Run full 5-stage forecasting pipeline for one agent."""
     _handler = handler or NullHandler()
@@ -375,14 +403,25 @@ async def run_agent(
 
     # Stage 2: Research (agentic search loop)
     await _evt(EventType.AGENT_STAGE_START, Stage.RESEARCH)
+
+    # When shared research is available, reduce per-question search to 1 follow-up round
+    search_max_rounds = 1 if shared_research else None
     search_trace = await _run_agentic_search(
         question, decompose.initial_search_queries, question.close_date,
-        handler=_handler, agent_id=agent_id,
+        handler=_handler, agent_id=agent_id, live_mode=live_mode,
+        max_rounds=search_max_rounds,
     )
 
     # Synthesize research findings via LLM (still part of research stage)
     research_prompt = load_prompt("research")
-    search_summary = "\n\n".join([
+
+    # Prepend shared cluster findings when available
+    shared_section = ""
+    if shared_research:
+        findings = "\n".join(f"- {f}" for f in shared_research.shared_findings)
+        shared_section = f"## Shared Research (cluster: {shared_research.cluster_tag})\n{findings}\n\n## Question-Specific Search\n"
+
+    search_summary = shared_section + "\n\n".join([
         f"**Search {r.round_number}: {r.query}**\n{r.result.content}"
         for r in search_trace.rounds
     ])
@@ -392,10 +431,10 @@ async def run_agent(
         f"\n\nSearch Results:\n{search_summary}{memory_section}"
     )
 
-    # For research output, we need to inject the search trace after
+    # Use _ResearchLite (no search_trace) to avoid Gemini MALFORMED_FUNCTION_CALL
     research_raw = await _run_stage_dispatch(
         model_config, research_prompt, research_msg,
-        ResearchOutput, temperature=1.0, handler=_handler,
+        _ResearchLite, temperature=1.0, handler=_handler,
     )
     # Override the search trace with the actual one
     research = ResearchOutput(

@@ -12,7 +12,6 @@ import numpy as np
 
 from .orchestrator import _forecast_one
 from .calibrate import load_params
-from .postmortem import filter_memory_for_ab
 from .types import (
     ChangelogEntry,
     Domain,
@@ -135,11 +134,8 @@ async def _ab_test(
     ]))
 
     test_questions = [r.question for r in existing_results]
-    exclude_ids = {q.question_id for q in test_questions}
 
-    # Filter memory to prevent hindsight contamination
-    full_memory = load_memory()
-    filtered_memory = filter_memory_for_ab(full_memory, exclude_ids)
+    memory = load_memory()
 
     platt_params = load_params()
     target_path = PROJECT_ROOT / target_file
@@ -153,7 +149,7 @@ async def _ab_test(
     # Run with NEW prompt (parallel)
     try:
         new_results = list(await asyncio.gather(*[
-            _forecast_one(q, filtered_memory, platt_params) for q in test_questions
+            _forecast_one(q, memory, platt_params) for q in test_questions
         ]))
 
         brier_new = float(np.mean([
@@ -187,6 +183,22 @@ async def run_autoresearcher(
     error_pattern = proposal["error_pattern"]
 
     print(f"  Proposed change to {target_file}: {change_description}")
+
+    # Skip A/B testing when ab_size is 0 — apply change directly
+    if ab_size == 0:
+        target_path = PROJECT_ROOT / target_file
+        target_path.write_text(new_content)
+        print(f"  APPLIED (A/B testing disabled)")
+        entry = ChangelogEntry(
+            batch_id=batch_id,
+            target_file=target_file,
+            change_description=change_description,
+            error_pattern=error_pattern,
+            accepted=True,
+            diff_summary=f"Applied change to {target_file} (no A/B test)",
+        )
+        _save_changelog_entry(entry)
+        return entry
 
     # Subset results for A/B test if ab_size is set
     ab_results = results

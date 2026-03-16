@@ -24,8 +24,8 @@ class Domain(str, Enum):
 
 
 class Question(BaseModel):
-    post_id: int
-    question_id: int
+    post_id: Optional[int] = None
+    question_id: Optional[int] = None
     id: str
     source: str
     url: str
@@ -35,9 +35,9 @@ class Question(BaseModel):
     created_date: str
     close_date: str
     resolved_date: str
-    outcome: int  # 0 or 1
+    outcome: Optional[int] = None  # 0 or 1; None for unresolved testing questions
     community_prediction_final: float
-    num_forecasters: int
+    num_forecasters: Optional[int] = None
     tags: list[str]
     domain: Domain
 
@@ -93,12 +93,22 @@ class SynthesisOutput(BaseModel):
     base_rate_weight: float = Field(description="Weight given to base rate vs inside view")
     adjustment_reasoning: str = Field(description="How base rate and inside view were combined")
     final_probability: float = Field(ge=0.0, le=1.0)
+    confidence_level: str = Field(description="high, medium, or low")
+    confidence_justification: str = Field(description="Why this confidence level")
+    confidence_interval_lower: float = Field(ge=0.0, le=1.0, description="Lower bound of 80% CI")
+    confidence_interval_upper: float = Field(ge=0.0, le=1.0, description="Upper bound of 80% CI")
     confidence_reasoning: str = Field(description="Why this probability and not higher/lower")
+
+
+class ClusterResearchOutput(BaseModel):
+    cluster_tag: str
+    shared_findings: list[str]
+    search_trace: SearchTrace
 
 
 class AgentTrace(BaseModel):
     agent_id: int
-    question_id: int
+    question_id: Optional[int] = None
     model_id: str = "claude-opus-4-6"
     decompose: DecomposeOutput
     research: ResearchOutput
@@ -114,6 +124,13 @@ class SupervisorOutput(BaseModel):
     targeted_searches: list[SearchResult] = Field(default_factory=list)
     reconciliation_reasoning: str = Field(description="How disagreements were resolved")
     reconciled_probability: float = Field(ge=0.0, le=1.0)
+
+
+class ClusterSupervisorOutput(BaseModel):
+    cluster_tag: str
+    question_results: dict[str, SupervisorOutput]  # question.id → output
+    probability_sum: float
+    coherence_reasoning: str  # How the sum constraint was enforced
 
 
 class ForecastResult(BaseModel):
@@ -171,8 +188,8 @@ class ChangelogEntry(BaseModel):
     target_file: str
     change_description: str
     error_pattern: str
-    brier_old: float
-    brier_new: float
+    brier_old: Optional[float] = None
+    brier_new: Optional[float] = None
     accepted: bool
     diff_summary: str
 
@@ -238,3 +255,22 @@ def sample_random_batch(questions: list[Question], batch_size: int = 12, exclude
         # Pool exhausted — allow repeats with updated prompts
         pool = list(questions)
     return random.sample(pool, min(batch_size, len(pool)))
+
+
+def load_testing_questions(path: Optional[Path] = None) -> list[Question]:
+    """Load unresolved testing questions from testing_questions.jsonl.
+
+    Auto-assigns question_id from a hash of the id field so the UI
+    (which keys on question_id) can track each question separately.
+    """
+    from .utils import load_jsonl
+    path = path or PROJECT_ROOT / "data" / "testing_questions.jsonl"
+    questions = []
+    for entry in load_jsonl(path):
+        # Synthesize integer question_id from string id if missing
+        if entry.get("question_id") is None:
+            entry["question_id"] = abs(hash(entry["id"])) % (10**9)
+        if entry.get("post_id") is None:
+            entry["post_id"] = entry["question_id"]
+        questions.append(Question.model_validate(entry))
+    return questions

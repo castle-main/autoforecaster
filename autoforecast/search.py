@@ -84,31 +84,35 @@ async def execute_search(
     handler=None,
     question_title: str | None = None,
     model: str = "sonar-reasoning-pro",
+    live_mode: bool = False,
 ) -> SearchResult:
-    """Execute a single search query via Perplexity API with date gating.
+    """Execute a single search query via Perplexity API.
 
-    Appends date constraint to query, post-hoc filters citations
-    with known post-close dates, and runs LLM contamination scan.
+    In backtest mode (default): appends date constraint, filters citations,
+    and runs LLM contamination scan.
+    In live mode: uses raw query with no date gating or decontamination.
     """
     api_key = api_key or os.environ["PERPLEXITY_API_KEY"]
 
-    # Layer 1: Append date constraint to push filtering into the search index
-    date_constrained_query = f"{query} before:{close_date}"
+    if live_mode:
+        final_query = query
+        system_content = "You are a research assistant."
+    else:
+        # Layer 1: Append date constraint to push filtering into the search index
+        final_query = f"{query} before:{close_date}"
+        system_content = (
+            f"You are a research assistant. The current date is {close_date}. "
+            f"ONLY use sources published on or before {close_date}. "
+            f"Do NOT reference any events, data, or developments after {close_date}. "
+            f"If a source was published after {close_date}, ignore it completely. "
+            f"Answer as if you are living on {close_date} and have no knowledge of the future."
+        )
 
     payload = {
         "model": model,
         "messages": [
-            {
-                "role": "system",
-                "content": (
-                    f"You are a research assistant. The current date is {close_date}. "
-                    f"ONLY use sources published on or before {close_date}. "
-                    f"Do NOT reference any events, data, or developments after {close_date}. "
-                    f"If a source was published after {close_date}, ignore it completely. "
-                    f"Answer as if you are living on {close_date} and have no knowledge of the future."
-                ),
-            },
-            {"role": "user", "content": date_constrained_query},
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": final_query},
         ],
         "temperature": 0.0,
     }
@@ -140,6 +144,14 @@ async def execute_search(
         await track_api_cost(
             _handler, "perplexity", model,
             usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0),
+        )
+
+    if live_mode:
+        # No date filtering or decontamination for live questions
+        return SearchResult(
+            query=query,
+            content=content,
+            citations=citations,
         )
 
     # Post-hoc filter: remove citations with dates after close_date

@@ -30,10 +30,26 @@ Before finalizing, challenge your estimate:
 - Probabilities of 2%, 10%, 90%, 98% are all valid if the evidence supports them
 - But extremely confident predictions (>97% or <3%) should be rare and well-justified
 
+## Confidence Assessment
+
+Assess your confidence in this estimate:
+
+- **Discrete level** — high, medium, or low:
+  - **high**: strong direct evidence, multiple corroborating sources, clear causal mechanism
+  - **medium**: reasonable evidence but some gaps, partially conflicting sources
+  - **low**: weak or indirect evidence, high uncertainty, limited or speculative sources
+- **80% confidence interval** — the range you believe contains the true probability 80% of the time. A narrow interval signals high confidence; a wide interval signals genuine uncertainty.
+- Don't default to "medium" — actually assess the strength and quality of the evidence you found.
+- Don't produce artificially narrow CIs when evidence is weak. If you're genuinely uncertain, the interval should be wide.
+
 ## Output
 
 Provide your synthesis as structured output with:
 - `base_rate_weight`: Weight given to base rate (0 to 1, where 1 = base rate only)
 - `adjustment_reasoning`: How you combined base rate and inside view
 - `final_probability`: Your final probability estimate (0 to 1)
+- `confidence_level`: "high", "medium", or "low"
+- `confidence_justification`: Brief explanation of why this confidence level
+- `confidence_interval_lower`: Lower bound of 80% CI
+- `confidence_interval_upper`: Upper bound of 80% CI
 - `confidence_reasoning`: Why this probability and not higher/lower

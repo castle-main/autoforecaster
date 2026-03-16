@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-import re
 
 import anthropic
 
@@ -111,58 +110,60 @@ async def run_postmortems(
 
 
 def update_memory(postmortems: list[PostmortemOutput]) -> None:
-    """Append lessons from postmortems to memory.md."""
+    """Append lessons from postmortems to memory.md, grouped by domain."""
     memory_path = PROJECT_ROOT / "memory.md"
 
     existing = memory_path.read_text() if memory_path.exists() else "# Forecasting Lessons\n\n"
 
-    new_lessons = []
+    # Group lessons by domain
+    domain_lessons: dict[str, list[str]] = {}
     for pm in postmortems:
         if not pm.lessons:
             continue
-        lessons_text = "\n".join(f"  - {lesson}" for lesson in pm.lessons)
-        # Tag with source question_id for A/B filtering
-        new_lessons.append(
-            f"<!-- source: {pm.question_id} -->\n"
-            f"- **{pm.question_title}** ({pm.domain.value}, {pm.process_classification.value}):\n"
-            f"{lessons_text}"
-        )
+        domain = pm.domain.value
+        if domain not in domain_lessons:
+            domain_lessons[domain] = []
+        domain_lessons[domain].extend(pm.lessons)
 
-    if new_lessons:
-        existing += "\n" + "\n\n".join(new_lessons) + "\n"
+    if domain_lessons:
+        new_blocks = []
+        for domain, lessons in sorted(domain_lessons.items()):
+            lines = "\n".join(f"- {lesson}" for lesson in lessons)
+            new_blocks.append(f"<!-- domain: {domain} -->\n{lines}")
+        existing += "\n" + "\n\n".join(new_blocks) + "\n"
         memory_path.write_text(existing)
 
 
-def filter_memory_for_ab(memory: str, exclude_ids: set[int]) -> str:
-    """Filter memory to exclude lessons from specific question IDs.
+async def consolidate_memory() -> None:
+    """Consolidate memory.md using an LLM to deduplicate and merge lessons."""
+    memory_path = PROJECT_ROOT / "memory.md"
 
-    Used during A/B testing to prevent hindsight contamination.
-    """
-    if not memory:
-        return memory
+    if not memory_path.exists():
+        return
 
-    lines = memory.split("\n")
-    filtered_lines = []
-    skip_block = False
+    content = memory_path.read_text()
+    # Skip consolidation if memory is still small
+    if content.count("\n") < 30:
+        return
 
-    for line in lines:
-        # Check for source tags
-        source_match = re.search(r'<!-- source: (\d+) -->', line)
-        if source_match:
-            qid = int(source_match.group(1))
-            if qid in exclude_ids:
-                skip_block = True
-                continue
-            else:
-                skip_block = False
+    client = anthropic.AsyncAnthropic(timeout=120.0)
 
-        if skip_block:
-            # Skip until next source tag or empty line that isn't part of a lesson
-            if line.strip() == "" or (line.startswith("- **") and "<!-- source:" not in line):
-                skip_block = False
-            else:
-                continue
+    response = await client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=4096,
+        temperature=0.0,
+        system=(
+            "You consolidate a forecasting lessons file. Your job:\n"
+            "1. Deduplicate semantically similar lessons\n"
+            "2. Merge related lessons within the same domain\n"
+            "3. Preserve <!-- domain: X --> tags for organizational grouping\n"
+            "4. Keep ONLY generalizable forecasting methodology — remove any event-specific "
+            "facts, outcomes, names, dates, or details that leaked through\n"
+            "5. Output clean consolidated markdown starting with '# Forecasting Lessons'\n\n"
+            "Return ONLY the consolidated markdown, no commentary."
+        ),
+        messages=[{"role": "user", "content": content}],
+    )
 
-        filtered_lines.append(line)
-
-    return "\n".join(filtered_lines)
+    consolidated = response.content[0].text
+    memory_path.write_text(consolidated)

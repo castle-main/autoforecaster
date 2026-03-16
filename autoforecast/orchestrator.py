@@ -13,13 +13,16 @@ from pathlib import Path
 from .agent import run_agent
 from .calibrate import apply_platt, load_params
 from .events import EventType, NullHandler, PipelineEvent
-from .supervisor import supervise
+from .supervisor import supervise, supervise_cluster
 from .types import (
+    AgentTrace,
     BatchResult,
+    ClusterResearchOutput,
     ForecastResult,
     Question,
     RunSummary,
     load_questions,
+    load_testing_questions,
     sample_batch,
     sample_random_batch,
     PROJECT_ROOT,
@@ -29,12 +32,65 @@ from .utils import load_memory
 DEFAULT_CONCURRENCY = int(os.environ.get("FORECAST_CONCURRENCY", "5"))
 
 
+def _safe_tag(tag: str) -> str:
+    """Sanitize a cluster tag for use as a filename component."""
+    import re as _re
+    return _re.sub(r'[^\w\-]', '_', tag)
+
+
+async def _run_agents_only(
+    question: Question,
+    memory: str,
+    handler=None,
+    live_mode: bool = False,
+    shared_research: ClusterResearchOutput | None = None,
+    timeout_seconds: int = 300,
+) -> list[AgentTrace]:
+    """Run 3 agents for a question without supervisor or Platt.
+
+    Used for clustered questions where the cluster supervisor handles
+    reconciliation across all questions at once.
+    """
+    _handler = handler or NullHandler()
+
+    await _handler.handle(PipelineEvent(
+        event_type=EventType.QUESTION_START,
+        question_id=question.question_id, question_title=question.title,
+    ))
+
+    agent_tasks = [
+        asyncio.ensure_future(run_agent(question, agent_id=i, memory=memory, handler=_handler, live_mode=live_mode, shared_research=shared_research))
+        for i in range(3)
+    ]
+    done, pending = await asyncio.wait(agent_tasks, timeout=timeout_seconds)
+
+    for task in pending:
+        task.cancel()
+
+    traces = []
+    for task in done:
+        try:
+            traces.append(task.result())
+        except Exception as e:
+            print(f"    ⚠ Agent failed: {type(e).__name__}: {e}")
+
+    if not traces:
+        raise RuntimeError(f"All agents failed or timed out for {question.title[:50]}")
+
+    if pending:
+        print(f"    ⚠ {len(pending)} agent(s) timed out, proceeding with {len(traces)}")
+
+    return traces
+
+
 async def _forecast_one(
     question: Question,
     memory: str,
     platt_params=None,
     timeout_seconds: int = 300,
     handler=None,
+    live_mode: bool = False,
+    shared_research: ClusterResearchOutput | None = None,
 ) -> ForecastResult:
     """Forecast a single question: 3 parallel agents → supervisor → Platt.
 
@@ -50,7 +106,7 @@ async def _forecast_one(
 
     # Run 3 agents in parallel; collect whatever finishes within the timeout
     agent_tasks = [
-        asyncio.ensure_future(run_agent(question, agent_id=i, memory=memory, handler=_handler))
+        asyncio.ensure_future(run_agent(question, agent_id=i, memory=memory, handler=_handler, live_mode=live_mode, shared_research=shared_research))
         for i in range(3)
     ]
     done, pending = await asyncio.wait(agent_tasks, timeout=timeout_seconds)
@@ -74,7 +130,7 @@ async def _forecast_one(
         print(f"    ⚠ {len(pending)} agent(s) timed out, proceeding with {len(traces)}")
 
     # Supervisor reconciliation with whatever traces we have
-    supervisor_output = await supervise(question, traces, memory=memory, handler=_handler)
+    supervisor_output = await supervise(question, traces, memory=memory, handler=_handler, live_mode=live_mode)
 
     raw_prob = supervisor_output.reconciled_probability
 
@@ -88,10 +144,13 @@ async def _forecast_one(
             data={"calibrated_probability": calibrated, "raw_probability": raw_prob},
         ))
 
-    # Compute Brier scores
-    outcome = question.outcome
-    brier_raw = (raw_prob - outcome) ** 2
-    brier_cal = (calibrated - outcome) ** 2 if calibrated is not None else None
+    # Compute Brier scores (skip for live/unresolved questions)
+    brier_raw = None
+    brier_cal = None
+    if not live_mode and question.outcome is not None:
+        outcome = question.outcome
+        brier_raw = (raw_prob - outcome) ** 2
+        brier_cal = (calibrated - outcome) ** 2 if calibrated is not None else None
 
     result = ForecastResult(
         question=question,
@@ -181,7 +240,7 @@ async def run_backtest(start_batch: int = 0, num_batches: int = 1, batch_size: i
 async def run_eval(batch_id: int, results: list[ForecastResult] | None = None, ab_size: int | None = None) -> BatchResult | None:
     """Run eval + postmortem + autoresearcher on a completed batch."""
     from .eval import evaluate_batch
-    from .postmortem import run_postmortems, update_memory
+    from .postmortem import run_postmortems, update_memory, consolidate_memory
     from .autoresearcher import run_autoresearcher
 
     # Load traces from disk if not provided directly
@@ -226,6 +285,7 @@ async def run_eval(batch_id: int, results: list[ForecastResult] | None = None, a
     print("\nRunning postmortems...")
     postmortems = await run_postmortems(results)
     update_memory(postmortems)
+    await consolidate_memory()
     print(f"Postmortems complete. {len(postmortems)} lessons extracted.")
 
     # Autoresearcher
@@ -370,8 +430,245 @@ async def run_continuous(duration_seconds: int = 7200, start_batch: int = 0, bat
     print(f"Summary saved to {summary_path}")
 
 
+async def run_test(
+    concurrency: int = DEFAULT_CONCURRENCY,
+    max_questions: int | None = None,
+) -> list[ForecastResult]:
+    """Run pipeline on unresolved testing questions (live mode).
+
+    Saves each result incrementally to logs/test_traces/ and resumes
+    from existing results on restart.
+    """
+    import webbrowser
+    from .ui import RichHandler
+
+    from .cluster import cluster_questions, select_with_clusters
+    from .cluster_research import run_cluster_research
+
+    questions = load_testing_questions()
+
+    memory = load_memory()
+    platt_params = load_params()
+
+    traces_dir = PROJECT_ROOT / "logs" / "test_traces"
+    traces_dir.mkdir(parents=True, exist_ok=True)
+
+    # Resume support: skip already-completed question IDs
+    existing_results: list[ForecastResult] = []
+    existing_ids: set[str] = set()
+    for trace_file in traces_dir.glob("*.json"):
+        if trace_file.name.startswith("cluster_"):
+            continue
+        with open(trace_file) as f:
+            data = json.load(f)
+        result = ForecastResult.model_validate(data)
+        existing_results.append(result)
+        existing_ids.add(result.question.id)
+
+    remaining = [q for q in questions if q.id not in existing_ids]
+
+    # Cluster questions before --max slicing to keep clusters whole
+    clusters, singletons = cluster_questions(remaining)
+
+    if max_questions:
+        remaining = select_with_clusters(clusters, singletons, max_questions)
+        # Re-cluster the selected subset
+        clusters, singletons = cluster_questions(remaining)
+
+    if existing_ids:
+        print(f"Resuming: {len(existing_ids)} already done, {len(remaining)} remaining")
+    if clusters:
+        cluster_sizes = {tag: len(qs) for tag, qs in clusters.items()}
+        print(f"Clusters: {cluster_sizes}, Singletons: {len(singletons)}")
+
+    sem = asyncio.Semaphore(concurrency)
+    new_results: list[ForecastResult] = []
+
+    # Phase 1: Cluster research (load cached or run new)
+    cluster_research_map: dict[str, ClusterResearchOutput] = {}
+
+    # Load existing cluster research from disk
+    for tag in list(clusters.keys()):
+        cached = traces_dir / f"cluster_{_safe_tag(tag)}.json"
+        if cached.exists():
+            with open(cached) as f:
+                cluster_research_map[tag] = ClusterResearchOutput.model_validate(json.load(f))
+
+    with RichHandler() as handler:
+        # Run cluster research for any clusters not yet cached
+        uncached_clusters = {tag: qs for tag, qs in clusters.items() if tag not in cluster_research_map}
+        if uncached_clusters:
+            print(f"Running cluster research for {len(uncached_clusters)} clusters...")
+
+            async def _research_cluster(tag: str, qs: list[Question]) -> tuple[str, ClusterResearchOutput]:
+                async with sem:
+                    result = await run_cluster_research(tag, qs, memory=memory, handler=handler, live_mode=True)
+                    # Save cluster trace
+                    path = traces_dir / f"cluster_{_safe_tag(tag)}.json"
+                    with open(path, "w") as f:
+                        json.dump(result.model_dump(), f, indent=2, default=str)
+                    return tag, result
+
+            cluster_results = await asyncio.gather(*[
+                _research_cluster(t, qs) for t, qs in uncached_clusters.items()
+            ])
+            cluster_research_map.update(dict(cluster_results))
+
+        # Build question → shared_research mapping
+        q_to_research: dict[str, ClusterResearchOutput] = {}
+        for tag, qs in clusters.items():
+            for q in qs:
+                q_to_research[q.id] = cluster_research_map[tag]
+
+        # Phase 2a: Run agents only for clustered questions (no supervisor yet)
+        cluster_agent_traces: dict[str, list[AgentTrace]] = {}  # question.id → traces
+
+        async def _run_agents_for_cluster_q(question: Question) -> tuple[str, list[AgentTrace]] | None:
+            async with sem:
+                try:
+                    traces = await _run_agents_only(
+                        question, memory, handler=handler, live_mode=True,
+                        shared_research=q_to_research.get(question.id),
+                    )
+                    return question.id, traces
+                except Exception as e:
+                    print(f"    ✗ FAILED agents ({question.title[:50]}): {e}")
+                    return None
+
+        clustered_questions = [q for qs in clusters.values() for q in qs]
+        if clustered_questions:
+            agent_results_raw = await asyncio.gather(*[
+                _run_agents_for_cluster_q(q) for q in clustered_questions
+            ])
+            for item in agent_results_raw:
+                if item is not None:
+                    cluster_agent_traces[item[0]] = item[1]
+
+        # Phase 2b: Cluster supervisor for each cluster
+        for tag, qs in clusters.items():
+            # Only include questions whose agents succeeded
+            qs_with_traces = [q for q in qs if q.id in cluster_agent_traces]
+            if not qs_with_traces:
+                continue
+
+            traces_for_cluster = {q.id: cluster_agent_traces[q.id] for q in qs_with_traces}
+
+            try:
+                cluster_sv = await supervise_cluster(
+                    tag, qs_with_traces, traces_for_cluster,
+                    shared_research=cluster_research_map.get(tag),
+                    memory=memory, handler=handler, live_mode=True,
+                )
+            except Exception as e:
+                print(f"    ✗ Cluster supervisor failed ({tag}): {e}")
+                # Fallback: run per-question supervisor for this cluster
+                for q in qs_with_traces:
+                    try:
+                        sv_output = await supervise(q, traces_for_cluster[q.id], memory=memory, handler=handler, live_mode=True)
+                        raw_prob = sv_output.reconciled_probability
+                        calibrated = apply_platt(raw_prob, platt_params) if platt_params else None
+                        result = ForecastResult(
+                            question=q, agent_traces=traces_for_cluster[q.id],
+                            supervisor=sv_output, raw_probability=raw_prob,
+                            calibrated_probability=calibrated,
+                        )
+                        trace_path = traces_dir / f"{q.id}.json"
+                        with open(trace_path, "w") as f:
+                            json.dump(result.model_dump(), f, indent=2, default=str)
+                        new_results.append(result)
+                    except Exception as e2:
+                        print(f"    ✗ Fallback supervisor failed ({q.title[:50]}): {e2}")
+                continue
+
+            # Phase 2c: Platt + assemble ForecastResult per question
+            print(f"  Cluster {tag}: probability sum = {cluster_sv.probability_sum:.3f}")
+            for q in qs_with_traces:
+                sv_output = cluster_sv.question_results.get(q.id)
+                if sv_output is None:
+                    print(f"    ⚠ No cluster supervisor output for {q.id}")
+                    continue
+
+                raw_prob = sv_output.reconciled_probability
+                calibrated = apply_platt(raw_prob, platt_params) if platt_params else None
+
+                result = ForecastResult(
+                    question=q,
+                    agent_traces=cluster_agent_traces[q.id],
+                    supervisor=sv_output,
+                    raw_probability=raw_prob,
+                    calibrated_probability=calibrated,
+                )
+
+                await handler.handle(PipelineEvent(
+                    event_type=EventType.QUESTION_DONE,
+                    question_id=q.question_id, question_title=q.title,
+                    data={"raw_probability": raw_prob, "calibrated_probability": calibrated},
+                ))
+
+                trace_path = traces_dir / f"{q.id}.json"
+                with open(trace_path, "w") as f:
+                    json.dump(result.model_dump(), f, indent=2, default=str)
+
+                new_results.append(result)
+
+        # Phase 2d: Singletons use normal _forecast_one()
+        async def _run_singleton(question: Question) -> ForecastResult | None:
+            async with sem:
+                try:
+                    result = await _forecast_one(
+                        question, memory, platt_params, handler=handler, live_mode=True,
+                        shared_research=q_to_research.get(question.id),
+                    )
+                except Exception as e:
+                    print(f"    ✗ FAILED ({question.title[:50]}): {e}")
+                    return None
+
+                trace_path = traces_dir / f"{question.id}.json"
+                with open(trace_path, "w") as f:
+                    json.dump(result.model_dump(), f, indent=2, default=str)
+
+                return result
+
+        if singletons:
+            raw = await asyncio.gather(*[_run_singleton(q) for q in singletons])
+            new_results.extend(r for r in raw if r is not None)
+
+    all_results = existing_results + new_results
+
+    # Write lightweight summary
+    summary = []
+    for r in all_results:
+        summary.append({
+            "question_id": r.question.id,
+            "title": r.question.title,
+            "source": r.question.source,
+            "url": r.question.url,
+            "market_price": r.question.community_prediction_final,
+            "raw_probability": r.raw_probability,
+            "calibrated_probability": r.calibrated_probability,
+        })
+
+    logs_dir = PROJECT_ROOT / "logs"
+    summary_path = logs_dir / "test_results.json"
+    with open(summary_path, "w") as f:
+        json.dump(summary, f, indent=2)
+
+    print(f"\n{len(all_results)} results saved to {summary_path}")
+
+    # Generate interactive plot and open in browser
+    try:
+        from .test_plot import generate_test_plot
+        plot_path = generate_test_plot()
+        print(f"Plot saved to {plot_path}")
+        webbrowser.open(f"file://{plot_path}")
+    except Exception as e:
+        print(f"Could not generate plot: {e}")
+
+    return all_results
+
+
 def main():
-    """CLI entry point: python -m autoforecast <start_batch> <num_batches> [--eval <batch_id>] [--run [hours]] [--batch-size N] [--concurrency N] [--plot]"""
+    """CLI entry point: python -m autoforecast <start_batch> <num_batches> [--eval <batch_id>] [--run [hours]] [--test] [--batch-size N] [--concurrency N] [--plot]"""
     batch_size = 12
     if "--batch-size" in sys.argv:
         idx = sys.argv.index("--batch-size")
@@ -387,7 +684,14 @@ def main():
         idx = sys.argv.index("--ab-size")
         ab_size = int(sys.argv[idx + 1])
 
-    if "--plot" in sys.argv:
+    max_questions: int | None = None
+    if "--max" in sys.argv:
+        idx = sys.argv.index("--max")
+        max_questions = int(sys.argv[idx + 1])
+
+    if "--test" in sys.argv:
+        asyncio.run(run_test(concurrency=concurrency, max_questions=max_questions))
+    elif "--plot" in sys.argv:
         from .plot import plot_brier_scores, plot_domain_breakdown
         p1 = plot_brier_scores()
         print(f"Brier scores plot: {p1}")
