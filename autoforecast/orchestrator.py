@@ -23,6 +23,7 @@ from .types import (
     RunSummary,
     load_questions,
     load_testing_questions,
+    make_ask_question,
     sample_batch,
     sample_random_batch,
     PROJECT_ROOT,
@@ -667,8 +668,86 @@ async def run_test(
     return all_results
 
 
+def _print_ask_summary(result: ForecastResult) -> None:
+    """Print a polished Rich summary panel after --ask completes."""
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.table import Table
+    from rich.text import Text
+
+    console = Console()
+
+    # Final probability: prefer calibrated
+    final_prob = result.calibrated_probability if result.calibrated_probability is not None else result.raw_probability
+    prob_pct = f"{final_prob:.1%}"
+
+    # Header
+    header = Text()
+    header.append(result.question.title, style="bold")
+    header.append("\n\n")
+    header.append("Final Probability: ", style="dim")
+    header.append(prob_pct, style="bold green" if final_prob >= 0.5 else "bold red")
+
+    # Agent breakdown table
+    agent_table = Table(title="Agent Breakdown", show_header=True, header_style="bold cyan", expand=True)
+    agent_table.add_column("Agent", justify="center")
+    agent_table.add_column("Model", justify="center")
+    agent_table.add_column("Probability", justify="center")
+
+    for trace in result.agent_traces:
+        agent_table.add_row(
+            f"Agent {trace.agent_id}",
+            trace.model_id,
+            f"{trace.raw_probability:.1%}",
+        )
+
+    # Supervisor section
+    sv = result.supervisor
+    disagreements = "\n".join(f"  • {d}" for d in sv.disagreements[:3]) if sv.disagreements else "  None"
+    reconciliation = sv.reconciliation_reasoning[:300]
+    if len(sv.reconciliation_reasoning) > 300:
+        reconciliation += "…"
+
+    supervisor_text = (
+        f"[bold]Supervisor[/bold]\n"
+        f"Reconciled: {sv.reconciled_probability:.1%}\n"
+        f"Disagreements:\n{disagreements}\n\n"
+        f"Reasoning: {reconciliation}"
+    )
+
+    # Calibration
+    calibration_text = ""
+    if result.calibrated_probability is not None:
+        calibration_text = f"\n\n[bold]Calibration[/bold]: {result.raw_probability:.1%} → {result.calibrated_probability:.1%} (Platt scaling)"
+
+    # Assemble panel body
+    body_parts = [supervisor_text, calibration_text]
+
+    console.print()
+    console.print(Panel(header, title="Forecast Result", border_style="bright_blue"))
+    console.print(agent_table)
+    console.print(Panel("\n".join(body_parts), border_style="dim"))
+
+
+async def run_ask(title: str) -> None:
+    """Run the full forecasting pipeline on a single ad-hoc question."""
+    from .ui import RichHandler
+
+    question = make_ask_question(title)
+    memory = load_memory()
+    platt_params = load_params()
+
+    with RichHandler() as handler:
+        result = await _forecast_one(
+            question, memory, platt_params,
+            handler=handler, live_mode=True,
+        )
+
+    _print_ask_summary(result)
+
+
 def main():
-    """CLI entry point: python -m autoforecast <start_batch> <num_batches> [--eval <batch_id>] [--run [hours]] [--test] [--batch-size N] [--concurrency N] [--plot]"""
+    """CLI entry point: python -m autoforecast <start_batch> <num_batches> [--eval <batch_id>] [--run [hours]] [--test] [--ask [question]] [--batch-size N] [--concurrency N] [--plot]"""
     batch_size = 12
     if "--batch-size" in sys.argv:
         idx = sys.argv.index("--batch-size")
@@ -689,7 +768,16 @@ def main():
         idx = sys.argv.index("--max")
         max_questions = int(sys.argv[idx + 1])
 
-    if "--test" in sys.argv:
+    if "--ask" in sys.argv:
+        idx = sys.argv.index("--ask")
+        # Use next arg as title if it exists and isn't a flag
+        if idx + 1 < len(sys.argv) and not sys.argv[idx + 1].startswith("-"):
+            title = sys.argv[idx + 1]
+        else:
+            from rich.prompt import Prompt
+            title = Prompt.ask("Enter your forecasting question")
+        asyncio.run(run_ask(title))
+    elif "--test" in sys.argv:
         asyncio.run(run_test(concurrency=concurrency, max_questions=max_questions))
     elif "--plot" in sys.argv:
         from .plot import plot_brier_scores, plot_domain_breakdown

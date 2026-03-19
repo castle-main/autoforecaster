@@ -59,7 +59,7 @@ PRICING = {
     "claude-haiku-4-5-20251001": {"input": 0.80, "output": 4.0},
     "sonar-reasoning-pro": {"input": 2.0, "output": 8.0},
     "gpt-5.4": {"input": 10.0, "output": 30.0},
-    "gemini-2.5-pro": {"input": 1.25, "output": 10.0},
+    "gemini-3.1-pro-preview": {"input": 1.25, "output": 10.0},
 }
 
 

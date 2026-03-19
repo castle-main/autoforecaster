@@ -53,11 +53,11 @@ class ModelConfig:
     api_key_env: str
 
 
-# Agent 0: Claude Opus, Agent 1: GPT 5.4 Pro, Agent 2: Gemini 2.5 Pro
+# Agent 0: Claude Opus, Agent 1: GPT 5.4 Pro, Agent 2: Gemini 3.1 Pro
 AGENT_MODELS: dict[int, ModelConfig] = {
     0: ModelConfig(provider="anthropic", model_id="claude-opus-4-6", api_key_env="ANTHROPIC_API_KEY"),
     1: ModelConfig(provider="openai", model_id="gpt-5.4", api_key_env="OPENAI_API_KEY"),
-    2: ModelConfig(provider="google", model_id="gemini-2.5-pro", api_key_env="GEMINI_API_KEY"),
+    2: ModelConfig(provider="google", model_id="gemini-3.1-pro-preview", api_key_env="GEMINI_API_KEY"),
 }
 
 

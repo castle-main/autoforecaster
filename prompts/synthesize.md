@@ -16,6 +16,15 @@ Combine the base rate and inside view into a single calibrated probability estim
   - How strong and specific the inside-view evidence is (stronger → weight inside view more)
   - How much the evidence is likely already captured in the base rate
 
+## Probability Floors
+
+Never assign probabilities below these floors unless you have overwhelming evidence the event is structurally impossible:
+- **Multi-year horizon events** with non-zero plausible pathways: minimum 1-2%
+- **Geopolitical tail risks** over 12+ month windows: minimum 1-2%
+- **Mortality/health events** for public figures over 18+ months: minimum 3-5%
+
+Extreme compression (0.01-0.5%) creates false precision and systematically underestimates tail risks.
+
 ## Calibration Check
 
 Before finalizing, challenge your estimate:
@@ -23,12 +32,14 @@ Before finalizing, challenge your estimate:
 - **Near 50%** — is this genuine uncertainty, or are you hedging because you're unsure?
 - Would you bet real money at these odds?
 - If you're between X% and Y%, what evidence would push you to each end of that range?
+- **Check against prediction markets**: If liquid markets exist and your estimate diverges by >15pp, re-examine your reasoning. You need a specific, articulable edge over the market to justify large divergence.
 
 ## Use the Full Range
 
 - Don't cluster around 50% out of false modesty
 - Probabilities of 2%, 10%, 90%, 98% are all valid if the evidence supports them
 - But extremely confident predictions (>97% or <3%) should be rare and well-justified
+- **Beware systematic downward bias**: LLMs tend to hedge toward lower probabilities. If your base rate, inside view, and market signals all point above 50%, don't let residual uncertainty pull you below 50%
 
 ## Confidence Assessment
 

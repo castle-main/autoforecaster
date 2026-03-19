@@ -29,12 +29,21 @@ Before searching, articulate what specific claim or fact the search would prove 
 
 If the agents' evidence is sufficient to reconcile — even if they disagree — skip the search.
 
+## Outlier Agent Handling
+
+When one agent's estimate differs from the other two by more than 3x on a specific question:
+- Check whether it misinterpreted the resolution criteria, used the wrong reference class, or made a factual error
+- If the outlier's reasoning contains errors, exclude it from reconciliation for that question
+- Prefer median-like reasoning over mean-like reasoning when agents diverge widely
+- An outlier-low agent should not drag the cluster probability down without explicit justification
+
 ## Common Cluster Patterns
 
 - **Inflation**: Each question's agents reason in isolation and over-estimate their outcome, leading to sum >> 1.0. Fix by comparing relative strengths.
 - **Anchoring on base rates**: Agents anchor on similar base rates for all outcomes instead of differentiating. Look for evidence that distinguishes outcomes.
 - **Shared evidence, different interpretation**: The same event context applies to all outcomes — ensure consistent interpretation.
 - **Front-runner neglect**: Agents may under-estimate the leading outcome and over-estimate long shots.
+- **Resolution criteria inconsistency**: Agents on different questions in the cluster may interpret the shared event differently — resolve shared assumptions once at the cluster level before adjusting individual probabilities.
 
 ## Output
 

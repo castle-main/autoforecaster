@@ -161,9 +161,11 @@ class ProcessClassification(str, Enum):
 class PostmortemOutput(BaseModel):
     question_id: int
     question_title: str
-    outcome: int
+    outcome: Optional[int] = None
     forecast_probability: float
-    brier_score: float
+    brier_score: Optional[float] = None
+    community_prediction: Optional[float] = None
+    divergence: Optional[float] = None  # forecast - community
     process_classification: ProcessClassification
     process_reasoning: str = Field(description="Why this process classification")
     lessons: list[str] = Field(description="Actionable lessons for future forecasts")
@@ -228,6 +230,28 @@ def clean_schema(schema: dict) -> dict:
 
 
 # --- Data utilities ---
+
+def make_ask_question(title: str) -> Question:
+    """Construct a Question from a bare title string for interactive --ask mode."""
+    question_id = abs(hash(title)) % (10**9)
+    return Question(
+        post_id=question_id,
+        question_id=question_id,
+        id=f"interactive_{question_id}",
+        source="interactive",
+        url="",
+        title=title,
+        description="",
+        resolution_criteria="",
+        created_date="2026-01-01",
+        close_date="2099-12-31",
+        resolved_date="",
+        outcome=None,
+        community_prediction_final=0.5,
+        tags=[],
+        domain=Domain.OTHER_POLICY,
+    )
+
 
 def load_questions(path: Optional[Path] = None) -> list[Question]:
     """Load all questions from questions.jsonl."""

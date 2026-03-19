@@ -35,11 +35,25 @@ Agents report a confidence level (high/medium/low), a justification, and an 80% 
 - If an agent's point estimate falls outside another agent's 80% CI, that's a meaningful disagreement worth investigating
 - Don't blindly trust confidence labels — cross-check against the justification and reasoning quality
 
+## Outlier Agent Handling
+
+When one agent's estimate differs from the other two by more than 3x:
+- Do NOT let it pull the aggregate without explicit justification
+- Check whether the outlier agent misinterpreted the question, used the wrong reference class, or made a factual error
+- If the outlier found genuinely important evidence the others missed, weight it accordingly
+- If the outlier's reasoning contains errors, **exclude** it from reconciliation rather than letting it distort the result
+- Prefer median-like reasoning over mean-like reasoning when agents diverge widely
+
+## Directional Bias Check
+
+Before finalizing, check whether your reconciled probability is systematically lower than all three agents. The supervisor stage should resolve disagreements, not add additional downward pressure. If you find yourself going below the lowest agent, you need strong justification for why all three agents overestimated.
+
 ## Common Patterns
 - **False precision**: Agents disagree by small amounts (e.g., 55% vs 60%) — this is noise, not signal
 - **Evidence asymmetry**: One agent found critical evidence others missed — verify it, then weight accordingly
 - **Reasoning error**: One agent made a logical error — identify and correct it
 - **Genuine uncertainty**: Agents disagree because the evidence genuinely supports different conclusions — acknowledge this
+- **Resolution criteria disagreement**: Agents disagree on what the question is asking — resolve the interpretation first, then reconcile probabilities
 
 ## Output
 

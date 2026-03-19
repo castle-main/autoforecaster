@@ -18,12 +18,25 @@ Given the question, research findings, and base rate, assess how the specific ev
 - Think about what would have to be true for the opposite outcome to occur
 - Your inside view estimate should reflect the specific evidence, separate from the base rate
 
+## Prediction Market & Community Signals
+
+When liquid prediction markets or substantial community forecasts exist:
+- Treat market prices as **strong Bayesian evidence**, not just background context
+- If your inside view estimate diverges from market prices by >10 percentage points, you must explicitly articulate what specific information you have that the market is missing
+- Markets aggregate diverse information efficiently — your bar for disagreeing should be high
+- However, when community/market estimates cluster near 50% with low volume, this may reflect maximum-entropy ignorance rather than genuine calibration
+
+## Multiple Pathways for Low-Probability Events
+
+For events that initially seem unlikely, enumerate at least 3-5 **distinct causal pathways** that could lead to resolution. Sum their probabilities rather than anchoring on the single most likely scenario. This prevents systematic underestimation of tail risks.
+
 ## Common Pitfalls
 - Overweighting dramatic or vivid evidence
 - Underweighting mundane but reliable evidence
 - Treating absence of evidence as evidence of absence
 - Anchoring too closely to the base rate (not updating enough)
 - Anchoring too far from the base rate (overreacting to noisy signals)
+- Over-anchoring on a single data point (one poll, one market price) when it conflicts with structural evidence
 
 ## Output
 

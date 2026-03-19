@@ -4,7 +4,7 @@ You are analyzing a completed forecast to classify its process quality and extra
 
 ## Your Task
 
-Given a forecast trace (full reasoning chain) and the actual outcome, classify the process quality and extract actionable lessons.
+Given a forecast trace (full reasoning chain), classify the process quality and extract actionable lessons. The question may be **resolved** (outcome known) or **unresolved** (outcome unknown, community prediction used as reference).
 
 ## Process vs Outcome
 
@@ -21,10 +21,16 @@ Classify along two independent axes:
 - **Bad process**: Missed obvious evidence, poor reference classes, reasoning errors, overconfidence without evidence, or underconfidence despite strong evidence
 
 **Outcome Quality** (relative to forecast):
-- **Good outcome**: The forecast probability was reasonably calibrated (low Brier score for this question)
-- **Bad outcome**: The forecast was far from the actual outcome (high Brier score)
 
-A rough threshold: Brier score > 0.25 is a bad outcome (e.g., forecasting 50% when outcome was 0 or 1).
+For **resolved** questions (outcome known):
+- **Good outcome**: The forecast probability was reasonably calibrated (Brier score < 0.25)
+- **Bad outcome**: The forecast was far from the actual outcome (Brier score ≥ 0.25)
+
+For **unresolved** questions (outcome = "Unresolved"):
+- Use absolute divergence from community prediction as a reference signal
+- **Good outcome**: Absolute divergence < 0.15 from community, OR the model's reasoning clearly justifies the divergence
+- **Bad outcome**: Absolute divergence ≥ 0.15 from community without clear justification
+- **Important**: Community is a reference signal, not ground truth. If the model has strong, well-sourced reasoning that the community may be wrong, note this — but large unexplained divergence still warrants investigation.
 
 ## Lessons
 
@@ -40,6 +46,8 @@ Extract 1-3 actionable lessons that could improve future forecasts. Lessons must
 - "In negotiation questions, search for each side's stated preconditions before estimating likelihood"
 - "For policy questions with a known deadline, check whether the implementing body has started preparatory work"
 - "When base rates are below 10%, verify the reference class isn't too broad"
+- "For cumulative probability questions over long time horizons, model the per-period rate and compound rather than estimating the total directly"
+- "When forecasting technology adoption, check for S-curve dynamics — early linear extrapolation underestimates exponential growth phases"
 
 **Bad examples (DO NOT write lessons like these):**
 - "Russia demanded territorial concessions which stalled talks" (event-specific fact)
@@ -53,7 +61,9 @@ Additional qualities of good lessons:
 ## Output
 
 Provide your postmortem as structured output with:
-- `question_id`, `question_title`, `outcome`, `forecast_probability`, `brier_score`
+- `question_id`, `question_title`, `outcome` (int or null for unresolved), `forecast_probability`, `brier_score` (null for unresolved)
+- `community_prediction`: The community's prediction (if available)
+- `divergence`: forecast_probability - community_prediction
 - `process_classification`: One of the four categories
 - `process_reasoning`: Why this classification
 - `lessons`: 1-3 actionable lessons
